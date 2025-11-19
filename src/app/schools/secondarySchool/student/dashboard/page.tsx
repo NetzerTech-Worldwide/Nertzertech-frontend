@@ -42,7 +42,7 @@ export default function DashboardPage() {
             subject="Biology"
             time="Due Today"
             bgColor="bg-[#BFE8FF]"
-            icon={<Image src="/_assets/vector1.png" alt="Assignment due" width={40} height={40} className="h-10 w-10 object-contain" priority />}
+            icon={<Image src="/_assets/Vector1.png" alt="Assignment due" width={40} height={40} className="h-10 w-10 object-contain" priority />}
           />
           <HighlightCard
             title="Upcoming Test"

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 const BASE = "/schools/secondarySchool/student";
-const DASHBOARD = `${BASE}/dashboard`;
+// const DASHBOARD = `${BASE}/dashboard`;
 
 
 type Item = { label: string; href: string; icon: LucideIcon; hasArrow?: boolean };
