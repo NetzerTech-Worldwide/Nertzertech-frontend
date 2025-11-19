@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { BookOpen, CalendarClock, Clock, Library, Headphones } from "lucide-react";
 
-/* simple local card */
+
 type HighlightCardProps = { title:string; subject:string; time:string; bgColor:string; icon:ReactNode; };
 function HighlightCard({ title, subject, time, bgColor, icon }: HighlightCardProps) {
   return (
