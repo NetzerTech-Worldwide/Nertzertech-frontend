@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import brandLogo from "@/public/_assets/brand-logo.png";
 import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard, BookOpen, GraduationCap, MessageSquare, Users,
@@ -70,14 +69,7 @@ export default function StudentSidebar() {
       <div className="flex h-full flex-col">
         <div className="flex-1 overflow-y-auto px-4 lg:px-6 pt-8 pb-6">
           <div className="mb-8 flex items-center">
-            <Image
-              src={brandLogo}
-              alt="NetzerTech"
-              width={280}
-              height={84}
-              className="h-16 w-auto object-contain"
-              priority
-            />
+            <Image src="/_assets/brand-logo.png" alt="NetzerTech" width={280} height={84} className="h-16 w-auto object-contain" priority />
           </div>
           <SidebarNav />
         </div>
@@ -140,14 +132,7 @@ export function StudentSidebarMobile({
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between px-4 pb-4 pt-4">
-            <Image
-              src={brandLogo}
-              alt="NetzerTech"
-              width={240}
-              height={72}
-              className="h-12 w-auto object-contain"
-              priority
-            />
+            <Image src="/_assets/brand-logo.png" alt="NetzerTech" width={240} height={72} className="h-12 w-auto object-contain" priority />
             <button onClick={onClose} className="p-2 rounded-md hover:bg-white/10 shrink-0">
               <X className="h-5 w-5 text-white" />
             </button>
