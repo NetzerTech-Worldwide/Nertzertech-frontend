@@ -70,11 +70,12 @@ export default function StudentSidebar() {
         <div className="flex-1 overflow-y-auto px-4 lg:px-6 pt-6 pb-4">
           <div className="-mt-15 flex items-start">
             <Image
-              src="/_assets/logo.png"
+              src="/_assets/Logo.png"
               alt="NetzerTech"
-              width={160}
-              height={48}
-              className="h-auto w-40 max-w-full"
+              width={220}
+              height={66}
+              className="h-auto w-48 max-w-full"
+              priority
             />
           </div>
           <SidebarNav />
@@ -134,10 +135,11 @@ export function StudentSidebarMobile({
         id={id}
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#2A7EAF] shadow-xl transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden
         ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}
+        style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))", paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between px-4 pt-6 pb-4">
-            <Image src="/_assets/logo.png" alt="NetzerTech" width={140} height={40} className="h-10 w-auto" />
+          <div className="flex items-center justify-between px-4 pb-4">
+            <Image src="/_assets/Logo.png" alt="NetzerTech" width={180} height={54} className="h-auto w-44" priority />
             <button onClick={onClose} className="p-2 rounded-md hover:bg-white/10">
               <X className="h-5 w-5 text-white" />
             </button>
@@ -147,7 +149,7 @@ export function StudentSidebarMobile({
             <SidebarNav onNavigate={onClose} />
           </div>
 
-          <div className="px-4 pb-6">
+          <div className="px-4">
             <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-5 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
               <LogOut className="h-4 w-4" />
               <span>Log Out</span>
