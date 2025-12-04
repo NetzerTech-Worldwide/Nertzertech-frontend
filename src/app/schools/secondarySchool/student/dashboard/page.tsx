@@ -2,8 +2,8 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { BookOpen, CalendarClock, Clock, Library, Headphones } from "lucide-react";
 
+type HighlightCardProps = { title: string; subject: string; time: string; bgColor: string; icon: ReactNode };
 
-type HighlightCardProps = { title:string; subject:string; time:string; bgColor:string; icon:ReactNode; };
 function HighlightCard({ title, subject, time, bgColor, icon }: HighlightCardProps) {
   return (
     <div className={`rounded-2xl shadow-sm ${bgColor} px-6 py-4`}>
@@ -29,7 +29,7 @@ export default function DashboardPage() {
           <p className="mt-1 text-sm text-slate-500">Ready for another great day at school?</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           <HighlightCard
             title="Next Class"
             subject="Mathematics"
@@ -55,7 +55,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Profile + Reminders */}
-      <section className="grid gap-4 lg:grid-cols-[1.7fr_1.3fr]">
+      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-[1.7fr_1.3fr]">
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
           <h2 className="text-base font-semibold text-slate-900">Profile</h2>
           <div className="mt-5 flex items-center gap-4">
@@ -82,7 +82,7 @@ export default function DashboardPage() {
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
           <div className="mb-4 border-b border-slate-100 pb-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-slate-900">Reminders</h2>
               <a href="#" className="text-xs font-medium text-[#135D96]">View all</a>
             </div>
@@ -93,21 +93,21 @@ export default function DashboardPage() {
             <li className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium text-slate-900">Biology Assignment Due</p>
-                <p className="mt-1 text-xs text-slate-500">Assignment · Due Tomorrow</p>
+                <p className="mt-1 text-xs text-slate-500">Assignment due tomorrow</p>
               </div>
               <span className="text-[10px] px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Pending</span>
             </li>
             <li className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium text-slate-900">Chemistry Project Due</p>
-                <p className="mt-1 text-xs text-slate-500">Project · Due Next Week</p>
+                <p className="mt-1 text-xs text-slate-500">Project due next week</p>
               </div>
               <span className="text-[10px] px-3 py-1 rounded-full border border-[#FF9F4A] bg-[#FFF3E5] text-[#F97316]">In progress</span>
             </li>
             <li className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium text-slate-900">Science Fair Registration</p>
-                <p className="mt-1 text-xs text-slate-500">Event · Due in 2 days</p>
+                <p className="mt-1 text-xs text-slate-500">Event happening in 2 days</p>
               </div>
               <span className="text-[10px] px-3 py-1 rounded-full border border-[#F97373] bg-[#FFECEC] text-[#E02424]">Action Needed</span>
             </li>
@@ -116,8 +116,8 @@ export default function DashboardPage() {
       </section>
 
       {/* Forum + Events */}
-      <section className="grid gap-4 lg:grid-cols-2">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <section className="grid gap-4 md:grid-cols-2 items-start w-full">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 w-full">
           <h2 className="text-base font-semibold text-slate-900">Latest Forum Topics</h2>
           <p className="mt-1 text-xs text-slate-500">Latest Forum Topics</p>
           <div className="mt-4 space-y-3">
@@ -130,10 +130,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 h-full flex flex-col">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 h-full flex flex-col w-full">
           <h2 className="text-base font-semibold text-slate-900">Upcoming Events</h2>
-          <div className="mt-3 flex-1 flex gap-3 overflow-x-auto pb-1">
-            <div className="min-w-[180px] rounded-2xl border border-slate-100 bg-slate-50 p-3">
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 flex flex-col h-full">
               <div className="h-20 rounded-xl overflow-hidden mb-3">
                 <Image src="/_assets/SHE.jpg" alt="SHE Initiative" width={320} height={80} className="h-full w-full object-cover" />
               </div>
@@ -144,7 +144,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="min-w-[180px] rounded-2xl border border-slate-100 bg-slate-50 p-3">
+            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 flex flex-col h-full">
               <div className="h-20 rounded-xl overflow-hidden mb-3">
                 <Image src="/_assets/AI.jpg" alt="AI Intelligent Event" width={320} height={80} className="h-full w-full object-cover" />
               </div>
@@ -161,7 +161,7 @@ export default function DashboardPage() {
       {/* Quick access */}
       <section>
         <h2 className="text-base font-semibold text-slate-900 mb-3">Quick Access</h2>
-        <div className="grid gap-4 md:grid-cols-4 text-sm">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 text-sm">
           <a href="/schools/secondarySchool/student/subjects" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
             <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full">
               <BookOpen className="h-5 w-5 text-[#E48251]" />
@@ -191,4 +191,3 @@ export default function DashboardPage() {
     </>
   );
 }
-
