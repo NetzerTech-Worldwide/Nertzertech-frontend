@@ -205,7 +205,7 @@ function SelectedSubjectsTable({ ids, student }: { ids: string[]; student: { nam
   if (!rows.length) {
     return (
       <div className="rounded-lg border border-slate-200 p-6 text-sm text-slate-500">
-        You haven't selected any subjects yet.
+        You have not selected any subjects yet.
       </div>
     );
   }

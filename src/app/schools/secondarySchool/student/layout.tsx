@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Image from "next/image";
 import { Bell, Mail, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import StudentSidebar, { StudentSidebarToggle } from "./student-sidebar";
