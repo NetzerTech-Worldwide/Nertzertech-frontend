@@ -67,14 +67,14 @@ export default function StudentSidebar() {
   return (
     <aside className="hidden md:block fixed inset-y-0 left-0 w-56 lg:w-64 bg-[#2A7EAF]">
       <div className="flex h-full flex-col">
-        <div className="flex-1 overflow-y-auto px-4 lg:px-6 pt-6 pb-4">
-          <div className="mb-6 flex items-center">
+        <div className="flex-1 overflow-y-auto px-4 lg:px-6 pt-8 pb-6">
+          <div className="mb-8 flex items-center">
             <Image
-              src="/_assets/ChatGPT%20Image%20Dec%201,%202025,%2001_56_34%20PM%201.png"
+              src="/_assets/ChatGPT Image Dec 1, 2025, 01_56_34 PM 1.png"
               alt="NetzerTech"
-              width={260}
-              height={78}
-              className="h-14 w-auto object-contain"
+              width={280}
+              height={84}
+              className="h-16 w-auto object-contain"
               priority
             />
           </div>
@@ -138,12 +138,12 @@ export function StudentSidebarMobile({
         style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))", paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between px-4 pb-4">
+          <div className="flex items-center justify-between px-4 pb-4 pt-1">
             <Image
-              src="/_assets/ChatGPT%20Image%20Dec%201,%202025,%2001_56_34%20PM%201.png"
+              src="/_assets/ChatGPT Image Dec 1, 2025, 01_56_34 PM 1.png"
               alt="NetzerTech"
-              width={220}
-              height={66}
+              width={240}
+              height={72}
               className="h-12 w-auto object-contain"
               priority
             />
@@ -152,7 +152,7 @@ export function StudentSidebarMobile({
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
+          <div className="flex-1 overflow-y-auto px-4 pb-4 pt-4">
             <SidebarNav onNavigate={onClose} />
           </div>
 
