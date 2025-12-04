@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import brandLogo from "@/public/_assets/ChatGPT Image Dec 1, 2025, 01_56_34 PM 1.png";
+import brandLogo from "@/public/_assets/brand-logo.png";
 import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard, BookOpen, GraduationCap, MessageSquare, Users,
@@ -136,10 +136,10 @@ export function StudentSidebarMobile({
         id={id}
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#2A7EAF] shadow-xl transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden
         ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}
-        style={{ paddingTop: "max(2rem, env(safe-area-inset-top))", paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
+        style={{ paddingTop: "max(2.5rem, env(safe-area-inset-top))", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between px-4 pb-4 pt-3">
+          <div className="flex items-center justify-between px-4 pb-4 pt-4">
             <Image
               src={brandLogo}
               alt="NetzerTech"
