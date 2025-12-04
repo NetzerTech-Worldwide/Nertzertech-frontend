@@ -68,16 +68,15 @@ export default function StudentSidebar() {
     <aside className="hidden md:block fixed inset-y-0 left-0 w-56 lg:w-64 bg-[#2A7EAF]">
       <div className="flex h-full flex-col">
         <div className="flex-1 overflow-y-auto px-4 lg:px-6 pt-6 pb-4">
-          <div className="mb-8 flex items-center gap-2">
+          <div className="mb-6 flex items-center">
             <Image
-              src="/_assets/Logo.png"
+              src="/_assets/ChatGPT%20Image%20Dec%201,%202025,%2001_56_34%20PM%201.png"
               alt="NetzerTech"
-              width={240}
-              height={72}
+              width={260}
+              height={78}
               className="h-14 w-auto object-contain"
               priority
             />
-            <span className="text-white font-semibold tracking-tight">NetzerTech</span>
           </div>
           <SidebarNav />
         </div>
@@ -140,16 +139,20 @@ export function StudentSidebarMobile({
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between px-4 pb-4">
-            <div className="flex items-center gap-2">
-              <Image src="/_assets/Logo.png" alt="NetzerTech" width={200} height={60} className="h-12 w-auto object-contain" priority />
-              <span className="text-white font-semibold tracking-tight">NetzerTech</span>
-            </div>
-            <button onClick={onClose} className="p-2 rounded-md hover:bg-white/10">
+            <Image
+              src="/_assets/ChatGPT%20Image%20Dec%201,%202025,%2001_56_34%20PM%201.png"
+              alt="NetzerTech"
+              width={220}
+              height={66}
+              className="h-12 w-auto object-contain"
+              priority
+            />
+            <button onClick={onClose} className="p-2 rounded-md hover:bg-white/10 shrink-0">
               <X className="h-5 w-5 text-white" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 pb-4">
+          <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
             <SidebarNav onNavigate={onClose} />
           </div>
 
