@@ -68,15 +68,16 @@ export default function StudentSidebar() {
     <aside className="hidden md:block fixed inset-y-0 left-0 w-56 lg:w-64 bg-[#2A7EAF]">
       <div className="flex h-full flex-col">
         <div className="flex-1 overflow-y-auto px-4 lg:px-6 pt-6 pb-4">
-          <div className="-mt-15 flex items-start">
+          <div className="mb-8 flex items-center gap-2">
             <Image
               src="/_assets/Logo.png"
               alt="NetzerTech"
-              width={220}
-              height={66}
-              className="h-auto w-48 max-w-full"
+              width={240}
+              height={72}
+              className="h-14 w-auto object-contain"
               priority
             />
+            <span className="text-white font-semibold tracking-tight">NetzerTech</span>
           </div>
           <SidebarNav />
         </div>
@@ -139,7 +140,10 @@ export function StudentSidebarMobile({
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between px-4 pb-4">
-            <Image src="/_assets/Logo.png" alt="NetzerTech" width={180} height={54} className="h-auto w-44" priority />
+            <div className="flex items-center gap-2">
+              <Image src="/_assets/Logo.png" alt="NetzerTech" width={200} height={60} className="h-12 w-auto object-contain" priority />
+              <span className="text-white font-semibold tracking-tight">NetzerTech</span>
+            </div>
             <button onClick={onClose} className="p-2 rounded-md hover:bg-white/10">
               <X className="h-5 w-5 text-white" />
             </button>
