@@ -1,34 +1,46 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
+import type { StaticImageData } from 'next/image';
+
 
 interface HeroSectionProps {
-  imageSrc: string;
+  imageSrc: StaticImageData | string;
   heading: string;
   description: string;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ imageSrc, heading, description }) => {
   return (
-    <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')`,
-        }}
-      />
-      <div className="relative z-10 p-12 py-5 text-white h-full w-full">
-        <div>
-          <div>
-            <Image src={imageSrc} alt="Hero Image" width={150} height={150} />
-          </div>
-          <div className="max-w-md absolute bottom-20">
-            <h1 className="text-2xl font-bold mb-4 leading-tight">{heading}</h1>
-            <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
-          </div>
+    <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+
+      <div className="absolute inset-0">
+        <Image 
+          src={imageSrc} 
+          alt="Hero Image" 
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40"></div>
+      </div>
+
+      <div className="absolute top-5 left-5 z-20">
+        <Image
+          src='/_assets/logo.png'
+          alt="Logo"
+          width={200}
+          height={200}
+          className="object-contain"
+        />
+      </div>
+
+      <div className="relative z-10 p-12 py-5 text-white w-full h-full">
+        <div className="max-w-md absolute bottom-20">
+          <h1 className="text-3xl font-bold mb-4 leading-tight">{heading}</h1>
+          <p className="text-gray-300 font-semibold text-[20px] leading-relaxed">{description}</p>
         </div>
       </div>
+
     </div>
   );
 };

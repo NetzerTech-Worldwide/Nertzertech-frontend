@@ -2,13 +2,17 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Eye, EyeOff } from "lucide-react";
-import HeroSection from '../../../_components/authHeroSection';
+import { useRouter } from 'next/navigation';
+import HeroSection from '../../../../_components/authHeroSection';
+import { loginTeacher } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/teacherOne.png'
 
 
 const LoginInterface: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
-    studentId: '',
+    fullName: '',
+    staffId: '',
     password: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -26,11 +30,11 @@ const LoginInterface: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Name is required';
     }
 
-    if (!formData.studentId.trim()) {
+    if (!formData.staffId.trim()) {
       newErrors.studentId = 'Student ID is required';
     }
 
@@ -44,49 +48,36 @@ const LoginInterface: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log('Login submitted:', formData);
-      setIsLoading(false);
-    }, 1500);
-  };
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+  if (!validateForm()) return;
+  
+  setIsLoading(true);
+  try {
+    const response = await loginTeacher(formData);  
+    // Handle successful login
+    console.log('Login successful:', response); 
+    router.push('/dashboard'); 
+  } catch (error) {
+    setErrors(prev => ({
+      ...prev,
+      submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
+    }));
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
+    router.push('/schools/secondarySchool/teacher/teacherForgetPassword')
   };
 
   return (
     <div className="h-fit lg:h-screen flex">
-      {/* <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')`,
-          }}
-        />
-        <div className="relative z-10 p-12 py-5 text-white h-full w-full">
-          <div>
-            <div>
-              <Image src="/_assets/logo.png" alt="NetzerTech Logo" width={150} height={150} />
-            </div>
-            <div className="max-w-md absolute bottom-7">
-              <h1 className="text-2xl font-bold mb-4 leading-tight">
-                Stay organized, stay ahead.
-              </h1>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                From timetables to exams, NetzerTech helps you focus on what truly matters during.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <HeroSection
-        imageSrc="/_assets/logo.png"
-        heading="Stay organized, stay ahead."
-        description="From timetables to exams, NetzerTech helps you focus on what truly matters."
+        imageSrc={heroImage}
+        heading="Empowering educators."
+        description="with smart tools to create, evaluate, and manage classrooms like never before."
       />
 
       <div className="flex-1 flex items-center justify-center bg-[#F3FAFF]">
@@ -109,17 +100,17 @@ const LoginInterface: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleInputChange}
                   placeholder="Enter Full Name"
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                    errors.fullName ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                {errors.fullName && (
+                  <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
                 )}
               </div>
 
@@ -131,7 +122,7 @@ const LoginInterface: React.FC = () => {
                   type="text"
                   id="studentId"
                   name="studentId"
-                  value={formData.studentId}
+                  value={formData.staffId}
                   onChange={handleInputChange}
                   placeholder="Enter Student ID"
                   className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
@@ -207,6 +198,12 @@ const LoginInterface: React.FC = () => {
                 Sign up
               </a>
             </div>
+
+            {errors.submit && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{errors.submit}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

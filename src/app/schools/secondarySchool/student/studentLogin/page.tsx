@@ -2,12 +2,16 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Eye, EyeOff } from "lucide-react";
-import HeroSection from '../../../_components/authHeroSection';
+import { useRouter } from 'next/navigation';
+import HeroSection from '../../../../_components/authHeroSection';
+import { loginStudent } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/studentOne.png'
 
 
 const LoginInterface: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     studentId: '',
     password: ''
   });
@@ -26,8 +30,8 @@ const LoginInterface: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Name is required';
     }
 
     if (!formData.studentId.trim()) {
@@ -44,24 +48,43 @@ const LoginInterface: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log('Login submitted:', formData);
-      setIsLoading(false);
-    }, 1500);
-  };
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+  if (!validateForm()) return;
+  
+  setIsLoading(true);
+  try {
+    const response = await loginStudent(formData);  
+    // Handle successful login
+    console.log('Login successful:', response);
+    
+    // Store token if provided
+    if (response.token) {
+      localStorage.setItem('authToken', response.token);
+    }
+    
+   
+    router.push('/dashboard'); 
+    
+  } catch (error) {
+    // Handle errors
+    setErrors(prev => ({
+      ...prev,
+      submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
+    }));
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
+    router.push('/schools/secondarySchool/student/studentForgetPassword')
   };
 
   return (
     <div className="h-fit lg:h-screen flex">
       <HeroSection
-        imageSrc="/_assets/logo.png"
+        imageSrc={heroImage}
         heading="Stay organized, stay ahead."
         description="From timetables to exams, NetzerTech helps you focus on what truly matters."
       />
@@ -86,17 +109,17 @@ const LoginInterface: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleInputChange}
                   placeholder="Enter Full Name"
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                    errors.fullName ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                {errors.fullName && (
+                  <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
                 )}
               </div>
 
@@ -178,12 +201,11 @@ const LoginInterface: React.FC = () => {
               </button>
             </div>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
-              <a href="#" className="text-cyan-600 hover:text-cyan-700 font-medium">
-                Sign up
-              </a>
-            </div>
+            {errors.submit && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{errors.submit}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
