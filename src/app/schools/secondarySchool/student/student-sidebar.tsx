@@ -67,19 +67,20 @@ export default function StudentSidebar() {
   return (
     <aside className="hidden md:block fixed inset-y-0 left-0 w-56 lg:w-64 bg-[#2A7EAF]">
       <div className="flex h-full flex-col">
-        <div className="px-5 lg:px-6 pt-4">
-          <Image src="/_assets/brand-logo.png" alt="NetzerTech" width={280} height={84} className="h-16 w-auto object-contain" priority />
+        <div className="px-5 lg:px-6 pt-4 pb-3">
+          <Image src="/_assets/brand-logo.png" alt="NetzerTech" width={340} height={102} className="h-35 w-auto object-contain" priority />
         </div>
 
-        <div className="flex-1 px-5 lg:px-6 pt-3">
-          <SidebarNav />
-        </div>
-
-        <div className="px-5 lg:px-6 pb-4 pt-3">
-          <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
-            <LogOut className="h-4 w-4" />
-            <span>Log Out</span>
-          </button>
+        <div className=" -mt-13 flex-1 px-5 lg:px-6 pb-4">
+          <div className="flex h-full flex-col gap-4">
+            <SidebarNav />
+            <div className="mt-auto pt-2">
+              <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
+                <LogOut className="h-4 w-4" />
+                <span>Log Out</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </aside>
@@ -129,25 +130,24 @@ export function StudentSidebarMobile({
         id={id}
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#2A7EAF] shadow-xl transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden
         ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}
-        style={{ paddingTop: "max(2.8rem, env(safe-area-inset-top))", paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
+        style={{ paddingTop: "max(2.5rem, env(safe-area-inset-top))", paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between px-4 pb-3">
-            <Image src="/_assets/brand-logo.png" alt="NetzerTech" width={300} height={90} className="h-16 w-auto object-contain" priority />
+        <div className="flex h-full flex-col px-4 pb-2">
+          <div className="flex items-center justify-between pb-3">
+            <Image src="/_assets/brand-logo.png" alt="NetzerTech" width={320} height={96} className="h-35 w-auto object-contain" priority />
             <button onClick={onClose} className="p-2 rounded-md hover:bg-white/10 shrink-0">
               <X className="h-5 w-5 text-white" />
             </button>
           </div>
 
-          <div className="flex-1 px-4 pb-2 pt-1">
+          <div className="-mt-13 flex-1 flex flex-col gap-3 pt-1">
             <SidebarNav onNavigate={onClose} />
-          </div>
-
-          <div className="px-4 pt-2">
-            <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
-              <LogOut className="h-4 w-4" />
-              <span>Log Out</span>
-            </button>
+            <div className="mt-auto pt-1 pb-1">
+              <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
+                <LogOut className="h-4 w-4" />
+                <span>Log Out</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
