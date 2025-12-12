@@ -454,7 +454,7 @@ export default function AcademicsPage() {
                         readyToPick ? "hover:bg-[#236a90]" : "opacity-50"
                       }`}
                     >
-                      Register
+                      Proceed
                     </button>
                   </div>
                 </form>
