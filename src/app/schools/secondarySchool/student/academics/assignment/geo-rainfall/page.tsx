@@ -107,7 +107,7 @@ export default function StartAssignmentPage() {
             <li>Save your work regularly to avoid losing progress</li>
             <li>Review the assignment requirements before submitting</li>
             <li>Check your spelling and grammar</li>
-            <li>Make sure you've answered all parts of the question</li>
+            <li>Make sure you&apos;ve answered all parts of the question</li>
           </ul>
         </div>
       </section>

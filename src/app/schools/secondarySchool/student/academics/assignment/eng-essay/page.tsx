@@ -98,7 +98,7 @@ export default function ViewSubmissionPage() {
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4">
           <h4 className="text-base font-semibold text-amber-800">Waiting for Feedback</h4>
           <p className="mt-1 text-sm text-amber-800">
-            Your teacher will review your submission and provide feedback. Here's what you can expect:
+            Your teacher will review your submission and provide feedback. Here&apos;s what you can expect:
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm font-medium text-amber-800">
             <li>Detailed comments on your work</li>
