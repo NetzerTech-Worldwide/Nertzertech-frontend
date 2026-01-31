@@ -3,8 +3,8 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import HeroSection from '../../../../_components/authHeroSection';
-import heroImage from '../../../../Assets/teacherOne.png'
-import { resetPassword } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/parentOne.png'
+import { forgetPassword } from '../../../../utils/authApi';
 
 const ForgotPasswordInterface: React.FC = () => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const ForgotPasswordInterface: React.FC = () => {
     
     setIsLoading(true);
     try {
-      const response = await resetPassword(formData.email);
+      const response = await forgetPassword(formData);
       console.log('Password reset email sent:', response);
       
       setIsSuccess(true);
@@ -58,7 +58,7 @@ const ForgotPasswordInterface: React.FC = () => {
   };
 
   const handleBackToLogin = () => {
-    router.push('/schools/secondarySchool/student/studentLogin');
+    router.push('/schools/secondarySchool/parent/parentLogin');
   };
 
   if (isSuccess) {
@@ -66,8 +66,8 @@ const ForgotPasswordInterface: React.FC = () => {
       <div className="h-fit lg:h-screen flex">
         <HeroSection
           imageSrc={heroImage}
-          heading="Stay organized, stay ahead."
-          description="From timetables to exams, NetzerTech helps you focus on what truly matters."
+          heading="Stay informed and involved."
+          description="Track your child’s academic progress, pay fees, and receive instant updates."
         />
 
         <div className="flex-1 flex items-center justify-center bg-[#F3FAFF]">

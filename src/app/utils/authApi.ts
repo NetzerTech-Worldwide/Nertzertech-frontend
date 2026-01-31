@@ -5,7 +5,7 @@ export const loginStudent = async (credentials: {
   studentId: string;
   password: string;
 }) => {
-  const response = await fetch(`${baseUrl}/auth/login/student`, {
+  const response = await fetch(`${baseUrl}/auth/login/student/secondary`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -19,6 +19,7 @@ export const loginStudent = async (credentials: {
   }
 
   return response.json();
+  console.log(credentials)
 };
 
 export const loginParent = async (credentials: {
@@ -43,7 +44,6 @@ export const loginParent = async (credentials: {
 };
 
 export const loginTeacher = async (credentials: {
-  fullName: string;
   staffId: string;
   password: string;
 }) => {
@@ -63,8 +63,10 @@ export const loginTeacher = async (credentials: {
   return response.json();
 };
 
-export const resetPassword = async (email: string) => {
-  const response = await fetch(`${baseUrl}/api/v1/auth/forgot-password`, {
+export const forgetPassword = async (email: {
+  email: string
+}) => {
+  const response = await fetch(`${baseUrl}/auth/forgot-password`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -79,3 +81,20 @@ export const resetPassword = async (email: string) => {
 
   return await response.json();
 };
+
+export const resetPassword = async(credential: string) =>{
+   const response = await fetch(`${baseUrl}/auth/reset-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ credential }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to send reset password email');
+  }
+
+  return await response.json();
+}

@@ -78,7 +78,7 @@ const LoginInterface: React.FC = () => {
 };
 
   const handleForgotPassword = () => {
-    router.push('/schools/secondarySchool/student/studentForgetPassword')
+    router.push('/schools/secondarySchool/student/forgetPassword')
   };
 
   return (

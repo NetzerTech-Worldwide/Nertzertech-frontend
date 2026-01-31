@@ -24,7 +24,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ imageSrc, heading, descriptio
         <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
-      <div className="absolute top-5 left-5 z-20">
+      <div className="absolute top-1 left-5 z-20">
         <Image
           src='/_assets/logo.png'
           alt="Logo"

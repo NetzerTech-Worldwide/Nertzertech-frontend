@@ -3,8 +3,8 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import HeroSection from '../../../../_components/authHeroSection';
-import heroImage from '../../../../Assets/parentOne.png'
-import { resetPassword } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/teacherOne.png'
+import { forgetPassword} from '../../../../utils/authApi';
 
 const ForgotPasswordInterface: React.FC = () => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const ForgotPasswordInterface: React.FC = () => {
     
     setIsLoading(true);
     try {
-      const response = await resetPassword(formData.email);
+      const response = await forgetPassword(formData);
       console.log('Password reset email sent:', response);
       
       setIsSuccess(true);
@@ -58,7 +58,7 @@ const ForgotPasswordInterface: React.FC = () => {
   };
 
   const handleBackToLogin = () => {
-    router.push('/schools/secondarySchool/parent/parentLogin');
+    router.push('/schools/secondarySchool/teacher/login');
   };
 
   if (isSuccess) {

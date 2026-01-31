@@ -1,26 +1,22 @@
 'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Eye, EyeOff, X } from "lucide-react";
-// import { useRouter } from 'next/navigation';
-import HeroSection from '../../../../_components/authHeroSection';
-import { loginParent } from '../../../../utils/authApi';
-import heroImage from '../../../../Assets/parentOne.png'
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from 'next/navigation';
+import HeroSection from '../../../../_components/authHeroSection';
+import { resetPassword } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/teacherOne.png'
 
 
-const LoginInterface: React.FC = () => {
+const ResetPasswordInterface: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
-    studentId: '',
-    password: ''
+    confirmPassword : '',
+    newPassword: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,18 +29,10 @@ const LoginInterface: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    }
-
-    if (!formData.studentId.trim()) {
-      newErrors.studentId = 'Student ID is required';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    if (!formData.newPassword) {
+      newErrors.password = 'type in your new password';
+    } else if (formData.newPassword  !== formData.confirmPassword) {
+      newErrors.password = 'Password must match.';
     }
 
     setErrors(newErrors);
@@ -54,22 +42,10 @@ const LoginInterface: React.FC = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   if (!validateForm()) return;
-
+  
   setIsLoading(true);
   try {
-    const response = await loginParent(formData);
-
-    // Handle successful login
-    console.log('Login successful:', response);
-    setShowPopup(true);
-    // Store token if provided
-    if (response.token) {
-      localStorage.setItem('authToken', response.token);
-      // or use cookies for better security
-    }
-
-    // Redirect to dashboard or home page
-
+    const response = await resetPassword(formData.newPassword);  
   } catch (error) {
     // Handle errors
     setErrors(prev => ({
@@ -81,20 +57,16 @@ const LoginInterface: React.FC = () => {
   }
 };
 
-  const handleForgotPassword = () => {
-    router.push('/schools/secondarySchool/parent/parentForgetPassword')
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
+  const backtoLogin = () => {
+    router.push('/schools/secondarySchool/teacher/login')
   };
 
   return (
     <div className="h-fit lg:h-screen flex">
       <HeroSection
         imageSrc={heroImage}
-        heading="Stay informed and involved. "
-        description="Track your child’s academic progress, pay fees, and receive instant updates."
+        heading="Stay organized, stay ahead."
+        description="From timetables to exams, NetzerTech helps you focus on what truly matters."
       />
 
       <div className="flex-1 flex items-center justify-center bg-[#F3FAFF]">
@@ -107,62 +79,42 @@ const LoginInterface: React.FC = () => {
 
           <div className="rounded-2xl p-8">
             <h2 className="text-xl font-bold text-gray-900 mb-2.5">
-              Welcome, Please Login
+              Create new password.
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-                <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Student ID
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Enter New Password.
                 </label>
                 <input
                   type="text"
-                  id="studentId"
-                  name="studentId"
-                  value={formData.studentId}
+                  id="password"
+                  name="newPassword"
+                  value={formData.newPassword}
                   onChange={handleInputChange}
-                  placeholder="Enter Student ID"
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.studentId ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                {errors.studentId && (
-                  <p className="mt-1 text-sm text-red-500">{errors.studentId}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter Email"
+                  placeholder="Enter New Password."
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                    errors.fullName ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                {errors.fullName && (
+                  <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
                 )}
               </div>
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Password
+                  Confirm Password.
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={formData.password}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    placeholder="Password"
+                    placeholder="Confirm Password."
                     className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
                       errors.password ? 'border-red-500' : 'border-gray-300'
                     }`}
@@ -180,16 +132,6 @@ const LoginInterface: React.FC = () => {
                 )}
               </div>
 
-              <div className="text-right">
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  className="text-sm text-cyan-600 hover:text-cyan-700 font-medium transition-colors"
-                >
-                  Forgot your password?
-                </button>
-              </div>
-
               <button
                 onClick={handleSubmit}
                 disabled={isLoading}
@@ -201,13 +143,23 @@ const LoginInterface: React.FC = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Logging in...
+                    Processing ...
                   </>
                 ) : (
-                  'Login'
+                  'Continue'
                 )}
               </button>
             </div>
+
+            <div className="text-center mt-2">
+                <button
+                type="button"
+                onClick={backtoLogin}  
+                className="text-sm font-medium "
+                >
+                Back to <span className='text-cyan-600 hover:text-cyan-700 transition-colors'>Login</span>
+                </button>
+              </div>
 
             {errors.submit && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -217,19 +169,8 @@ const LoginInterface: React.FC = () => {
           </div>
         </div>
       </div>
-       {showPopup && (
-        <div className="fixed inset-0 bg-gray-600/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-fade-in">
-              <p className='font-bold'>Would you like to set a 4 digit PIN tosecure your parent account?  </p>
-              <div className='flex gap-2 w-fit mt-5 m-auto'>
-                <button className='px-4 py-2 border rounded text-cyan-800 border-cyan-600' onClick={handleClosePopup}>No</button>
-                <button className='px-4 py-2 rounded text-white bg-cyan-600'>Yes</button>
-              </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default LoginInterface;
+export default ResetPasswordInterface;

@@ -1,23 +1,26 @@
 'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from 'next/navigation';
+import { Eye, EyeOff, X } from "lucide-react";
+// import { useRouter } from 'next/navigation';
 import HeroSection from '../../../../_components/authHeroSection';
-import { loginTeacher } from '../../../../utils/authApi';
-import heroImage from '../../../../Assets/teacherOne.png'
+import { loginParent } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/parentOne.png'
+import { useRouter } from 'next/navigation';
+import PinSetupModal from '../../../../_components/pinSetupModal';
 
 
 const LoginInterface: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    fullName: '',
-    staffId: '',
+    email: '',
+    studentId: '',
     password: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,11 +33,11 @@ const LoginInterface: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
     }
 
-    if (!formData.staffId.trim()) {
+    if (!formData.studentId.trim()) {
       newErrors.studentId = 'Student ID is required';
     }
 
@@ -49,35 +52,54 @@ const LoginInterface: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  e.preventDefault();
-  if (!validateForm()) return;
-  
-  setIsLoading(true);
-  try {
-    const response = await loginTeacher(formData);  
-    // Handle successful login
-    console.log('Login successful:', response); 
-    router.push('/dashboard'); 
-  } catch (error) {
-    setErrors(prev => ({
-      ...prev,
-      submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
-    }));
-  } finally {
-    setIsLoading(false);
-  }
-};
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await loginParent(formData);
+
+      // Handle successful login
+      console.log('Login successful:', response);
+      setShowPinModal(true);
+      
+      // Store token if provided
+      if (response.token) {
+        localStorage.setItem('authToken', response.token);
+        // or use cookies for better security
+      }
+
+    } catch (error) {
+      // Handle errors
+      setErrors(prev => ({
+        ...prev,
+        submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleForgotPassword = () => {
-    router.push('/schools/secondarySchool/teacher/teacherForgetPassword')
+    router.push('/schools/secondarySchool/parent/parentForgetPassword')
+  };
+
+  const handlePinSetupClose = () => {
+    setShowPinModal(false);
+    router.push('/schools/secondarySchool/parent/dashboard');
+  };
+
+  const handlePinSetupSuccess = () => {
+    setShowPinModal(false);
+    router.push('/schools/secondarySchool/parent/dashboard');
   };
 
   return (
     <div className="h-fit lg:h-screen flex">
       <HeroSection
         imageSrc={heroImage}
-        heading="Empowering educators."
-        description="with smart tools to create, evaluate, and manage classrooms like never before."
+        heading="Stay informed and involved. "
+        description="Track your child's academic progress, pay fees, and receive instant updates."
       />
 
       <div className="flex-1 flex items-center justify-center bg-[#F3FAFF]">
@@ -95,26 +117,6 @@ const LoginInterface: React.FC = () => {
 
             <div className="space-y-3">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  placeholder="Enter Full Name"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.fullName ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
-                )}
-              </div>
-
-              <div>
                 <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">
                   Student ID
                 </label>
@@ -122,7 +124,7 @@ const LoginInterface: React.FC = () => {
                   type="text"
                   id="studentId"
                   name="studentId"
-                  value={formData.staffId}
+                  value={formData.studentId}
                   onChange={handleInputChange}
                   placeholder="Enter Student ID"
                   className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
@@ -131,6 +133,26 @@ const LoginInterface: React.FC = () => {
                 />
                 {errors.studentId && (
                   <p className="mt-1 text-sm text-red-500">{errors.studentId}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter Email"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">{errors.email}</p>
                 )}
               </div>
 
@@ -192,13 +214,6 @@ const LoginInterface: React.FC = () => {
               </button>
             </div>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
-              <a href="#" className="text-cyan-600 hover:text-cyan-700 font-medium">
-                Sign up
-              </a>
-            </div>
-
             {errors.submit && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600">{errors.submit}</p>
@@ -207,6 +222,17 @@ const LoginInterface: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* PIN Setup Modal */}
+      <PinSetupModal
+        isOpen={showPinModal}
+        onClose={handlePinSetupClose}
+        onSuccess={handlePinSetupSuccess}
+        userData={{
+          email: formData.email,
+          studentId: formData.studentId
+        }}
+      />
     </div>
   );
 };
