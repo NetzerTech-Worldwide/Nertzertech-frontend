@@ -1,13 +1,17 @@
-import { ExaminationsFooterCard } from "./examinationsFooterCard"
-import classchedule from "../../../../public/_assets/class-schedule-icon.svg"
+import classSchedule from "../../../../public/_assets/class-schedule-icon.svg"
 import assignments from "../../../../public/_assets/assignments-icon.svg"
 import studyGroup from "../../../../public/_assets/study-group-icon.svg"
 import digitalLibrary from "../../../../public/_assets/digital-library-icon.svg"
+import Link from "next/link"
+import { examFooterCard, examFooterCardContainer, examFooterTitle } from "../../../../lib/cardStyles"
+import { Card } from "../cards/card"
 
 export const ExaminationsFooter = () => {
+    const baseURL = "http://localhost:3000"
+
     const cardContent = [
         {
-            icon: classchedule,
+            icon: classSchedule,
             title: "Class Schedule",
             link: "class-schedule"
         },
@@ -42,7 +46,14 @@ export const ExaminationsFooter = () => {
             <section className="grid grid-cols-4 gap-x-[39px] mt-[30px]  ">
                 {
                     cardContent.map((content) =>
-                        <ExaminationsFooterCard key={content.title} content={content} />
+                        <Link href={`${baseURL}/${content.link}`}
+                            key={content.link}
+                            className={`${examFooterCardContainer}`}>
+                            <Card cardStyle={examFooterCard}>
+                                <Card.Icon ImgSrc={content.icon}></Card.Icon>
+                                <Card.Title titleStyle={examFooterTitle}>{content.title}</Card.Title>
+                            </Card>
+                        </Link>
                     )
                 }
             </section>
