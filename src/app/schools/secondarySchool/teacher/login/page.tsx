@@ -1,18 +1,22 @@
 'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Eye, EyeOff, X } from "lucide-react";
-import HeroSection from '../../../_components/authHeroSection';
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from 'next/navigation';
+import HeroSection from '../../../../_components/authHeroSection';
+import { loginTeacher } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/teacherOne.png'
+
+
 const LoginInterface: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
-    studentId: '',
+    staffId: '',
     password: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,49 +28,46 @@ const LoginInterface: React.FC = () => {
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!formData.studentId.trim()) {
+    if (!formData.staffId.trim()) {
       newErrors.studentId = 'Student ID is required';
     }
 
-    if (!formData.password) {
+    else if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
+    } 
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log('', formData);
-      setIsLoading(false);
-    }, 1500);
-  };
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+  if (!validateForm()) return;
+  
+  setIsLoading(true);
+  try {
+    const response = await loginTeacher(formData);  
+    router.push('schools/secondarySchool/teacher/dashboard'); 
+  } catch (error) {
+    setErrors(prev => ({
+      ...prev,
+      submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
+    }));
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
+    router.push('/schools/secondarySchool/teacher/forgetPassword')
   };
 
   return (
-    <div className="h-fit lg:h-screen flex relative">
+    <div className="h-fit lg:h-screen flex">
       <HeroSection
-        imageSrc="/_assets/logo.png"
-        heading="Stay organized, stay ahead."
-        description="From timetables to exams, NetzerTech helps you focus on what truly matters."
+        imageSrc={heroImage}
+        heading="Empowering educators."
+        description="with smart tools to create, evaluate, and manage classrooms like never before."
       />
 
       <div className="flex-1 flex items-center justify-center bg-[#F3FAFF]">
@@ -85,15 +86,15 @@ const LoginInterface: React.FC = () => {
             <div className="space-y-3">
               <div>
                 <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Student ID/ Matric No.
+                  Staff ID
                 </label>
                 <input
                   type="text"
                   id="studentId"
-                  name="studentId"
-                  value={formData.studentId}
+                  name="staffId"
+                  value={formData.staffId}
                   onChange={handleInputChange}
-                  placeholder="Enter Student ID"
+                  placeholder="Enter Staff ID"
                   className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
                     errors.studentId ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -161,47 +162,14 @@ const LoginInterface: React.FC = () => {
               </button>
             </div>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
-              <a href="#" className="text-cyan-600 hover:text-cyan-700 font-medium">
-                Sign up
-              </a>
-            </div>
+            {errors.submit && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{errors.submit}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      
-      {showPopup && (
-        <div className="fixed inset-0 bg-gray-600/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-fade-in">
-            <button
-              onClick={handleClosePopup}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Close"
-            >
-              <X size={20} />
-            </button>
-            
-            <h3 className="text-lg font-semibold text-cyan-900 mb-2">
-              Important Notice
-            </h3>
-            <hr className='text-gray-500 mb-2'/>
-            <p className="text-sm mb-6 leading-relaxed">
-              Please use your matric number and 1234567 as the default password. 
-             <span className='font-bold'>Remember to change your password once you login to avoid compromise of your profile</span>
-            </p>
-            <div className="grid place-items-center">
-                <button
-                    onClick={handleClosePopup}
-                    className="bg-[#216388] w-fit hover:bg-cyan-700 text-white font-medium py-2.5 px-8 rounded-lg transition-colors"
-                >
-                    Cancel
-                </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
