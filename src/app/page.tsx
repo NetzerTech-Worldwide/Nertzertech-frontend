@@ -1,22 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Chakra_Petch, Manrope, Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, Compass, Medal } from "lucide-react";
 
-const headlineFont = Space_Grotesk({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["600", "700"],
-});
-
-const bodyFont = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const logoFont = Chakra_Petch({
-  subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 type FeatureBullet = {
@@ -117,8 +107,8 @@ function PopupCard({ title, subtitle, icon, iconClassName, className }: PopupCar
         <Icon className="h-4 w-4 sm:h-[1.05rem] sm:w-[1.05rem]" />
       </div>
       <div>
-        <p className="text-[11px] font-semibold leading-tight text-[#171717] sm:text-xs">{title}</p>
-        <p className="text-[10px] leading-tight text-[#5f6670] sm:text-[11px]">{subtitle}</p>
+        <p className="text-[8px] font-semibold leading-tight text-[#171717] sm:text-[9px]">{title}</p>
+        <p className="text-[7px] leading-tight text-[#5f6670] sm:text-[8px]">{subtitle}</p>
       </div>
     </div>
   );
@@ -131,17 +121,17 @@ function FeatureCard({ section }: { section: FeatureSection }) {
   return (
     <section className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
       <div className={`${textOrder}`}>
-        <span className="inline-flex rounded-full border border-[#b5ccdd] bg-[#f2f7fb] px-3 py-1 text-sm font-semibold text-[#306d96]">
+        <span className="inline-flex rounded-full border border-[#b5ccdd] bg-[#f2f7fb] px-3 py-1 text-[9px] font-semibold text-[#306d96]">
           {section.tag}
         </span>
-        <h2 className={`${headlineFont.className} mt-4 max-w-[16ch] text-4xl leading-tight text-[#2a79ad] sm:text-5xl`}>
+        <h2 className="mt-4 max-w-[16ch] text-[24px] font-extrabold leading-tight text-[#2a79ad] sm:text-[31px]">
           {section.title}
         </h2>
-        <p className="mt-5 max-w-[56ch] text-lg leading-8 text-[#5f6670]">{section.description}</p>
+        <p className="mt-5 max-w-[56ch] text-[12px] leading-5 text-[#5f6670]">{section.description}</p>
         {section.bullets ? (
           <ul className="mt-5 space-y-2">
             {section.bullets.map((bullet) => (
-              <li key={bullet.text} className="flex items-start gap-2 text-lg text-[#4f5660]">
+              <li key={bullet.text} className="flex items-start gap-2 text-[12px] text-[#4f5660]">
                 <span className={`mt-2 h-2.5 w-2.5 shrink-0 rounded-full ${bullet.color ?? "bg-[#111827]"}`} />
                 <span>{bullet.text}</span>
               </li>
@@ -189,7 +179,7 @@ function FeatureCard({ section }: { section: FeatureSection }) {
 
 export default function Home() {
   return (
-    <div className={`${bodyFont.className} min-h-screen bg-[#e8eff4] text-[#2f3a44]`}>
+    <div className={`${inter.className} min-h-screen bg-[#e8eff4] text-[#2f3a44]`}>
       <header className="sticky top-0 z-40 border-b border-[#d7e3ec] bg-[#f4f8fb]/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -201,18 +191,17 @@ export default function Home() {
               className="h-10 w-10 sm:h-12 sm:w-12"
               priority
             />
-            <span className={`${logoFont.className} text-xl font-semibold tracking-normal text-[#2b85bc] sm:text-[1.65rem]`}>
+            <span className="text-[13px] font-semibold tracking-normal text-[#2b85bc] sm:text-[17px]">
               NetzerTech
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-10 text-sm font-medium text-[#445766] md:flex">
+          <nav className="hidden items-center gap-10 text-[9px] font-medium text-[#445766] md:flex">
             <Link className="transition hover:text-[#277cb3]" href="#">
               Home
             </Link>
-            <Link className="relative text-[#277cb3]" href="#about">
-              About
-              <span className="absolute left-1/2 top-full mt-1 h-0 w-0 -translate-x-1/2 border-x-[5px] border-t-[7px] border-x-transparent border-t-[#277cb3]" />
+            <Link className="transition hover:text-[#277cb3]" href="/aboutus">
+              About Us
             </Link>
             <Link className="transition hover:text-[#277cb3]" href="#features">
               Features
@@ -224,7 +213,7 @@ export default function Home() {
 
           <Link
             href="#footer-hero"
-            className="rounded-2xl bg-[#2b85bc] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#2475a6]"
+            className="rounded-2xl bg-[#2b85bc] px-5 py-2.5 text-[9px] font-semibold text-white transition hover:bg-[#2475a6]"
           >
             Get Started
           </Link>
@@ -242,8 +231,8 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-[#2a79ad]/55" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-          <h1 className={`${headlineFont.className} text-4xl font-bold sm:text-6xl`}>Features</h1>
-          <p className="mt-3 text-xl sm:text-2xl">
+          <h1 className="text-[24px] font-extrabold sm:text-[39px]">Features</h1>
+          <p className="mt-3 text-[13px] sm:text-[15px]">
             Home <span className="mx-2 text-white/70">&gt;</span> About Us
           </p>
         </div>
@@ -262,22 +251,22 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50" />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-          <h2 className={`${headlineFont.className} max-w-[20ch] text-4xl font-bold leading-tight sm:text-6xl`}>
+          <h2 className="max-w-[20ch] text-[24px] font-extrabold leading-tight sm:text-[39px]">
             Built for real institutions and real world demands
           </h2>
-          <p className="mt-5 max-w-[46ch] text-lg text-white/90 sm:text-xl">
+          <p className="mt-5 max-w-[46ch] text-[12px] text-white/90 sm:text-[13px]">
             NetzerTech brings learning, administration, and data together into one dependable system.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="#"
-              className="rounded-2xl bg-white px-8 py-3 text-base font-semibold text-[#2a79ad] transition hover:bg-[#eaf4fb]"
+              className="rounded-2xl bg-white px-8 py-3 text-[11px] font-semibold text-[#2a79ad] transition hover:bg-[#eaf4fb]"
             >
               Talk to us
             </Link>
             <Link
               href="#"
-              className="rounded-2xl border border-white/80 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+              className="rounded-2xl border border-white/80 px-8 py-3 text-[11px] font-semibold text-white transition hover:bg-white/10"
             >
               Book a Demo
             </Link>
@@ -289,13 +278,13 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-[1240px] gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
             <Image src={logoImage} alt="NetzerTech" width={170} height={40} className="h-9 w-auto brightness-[1.2]" />
-            <p className="mt-4 text-lg text-white/80">Empowering education through technology</p>
+            <p className="mt-4 text-[12px] text-white/80">Empowering education through technology</p>
           </div>
 
           <div>
-            <h3 className={`${headlineFont.className} text-xl text-white`}>Quick Links</h3>
-            <div className="mt-4 flex flex-col gap-2 text-lg text-white/80">
-              <Link href="#about" className="transition hover:text-white">
+            <h3 className="text-[13px] font-semibold text-white">Quick Links</h3>
+            <div className="mt-4 flex flex-col gap-2 text-[12px] text-white/80">
+              <Link href="/aboutus" className="transition hover:text-white">
                 About Us
               </Link>
               <Link href="#features" className="transition hover:text-white">
@@ -308,7 +297,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-[1240px] px-4 pb-6 text-sm text-white/75 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-[1240px] px-4 pb-6 text-[10px] text-white/75 sm:px-6 lg:px-8">
           @2025 Netzertech All rights reserved.
         </div>
       </footer>
