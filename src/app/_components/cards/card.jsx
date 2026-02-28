@@ -1,5 +1,6 @@
 import { Analysis } from "./analysis"
 import { Dates } from "./date"
+import { Detail } from "./detail"
 import { Duration } from "./duration"
 import { Icon } from "./icon"
 import { Info } from "./info"
@@ -24,3 +25,4 @@ Card.Date = Dates
 Card.Status = Status
 Card.Duration = Duration
 Card.Analysis = Analysis
+Card.Detail = Detail
