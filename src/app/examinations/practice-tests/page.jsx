@@ -4,7 +4,7 @@ import { Card } from "../../_components/cards/card"
 import { ExaminationsFooter } from "../../_components/examination/examinationsFooter"
 import { ExaminationsNavigation } from "../../_components/examination/examinationsNavigation"
 
-const testStyles = `mt-[56px] mb-[0px] mx-[57px]`
+const testStyles = `py-[32px] mb-[20px] px-[24px]`
 const PracticeTests = () => {
     const testData = [
         {
@@ -38,8 +38,7 @@ const PracticeTests = () => {
 
     return (
         <main className={`w-auto h-auto bg-white ${testStyles} `}>
-            <ExaminationsNavigation />
-            <section className="grid grid-cols-3 mt-[48px] gap-x-[44px] gap-y-[29px] ">
+            <section className="grid grid-cols-3 gap-x-[44px] gap-y-[29px] ">
                 {
                     testData.map((data) => 
                         <Card cardStyle={testCard} key={data.id}>

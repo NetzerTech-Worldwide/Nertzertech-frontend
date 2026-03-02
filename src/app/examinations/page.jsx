@@ -1,10 +1,11 @@
-import { ExaminationsNavigation } from "../_components/examination/examinationsNavigation"
 import { Card } from "../_components/cards/card"
 import { examButton, examCard, examInfo, examStatus, examTitle } from "../../../lib/cardStyles"
 import { Button } from "../_components/cards/button"
+import { Calendar, Clock } from "lucide-react"
+import subjectImg from "../../../public/_assets/subject-image.svg"
 
 
-const examStyles = `border-1 border-black/10 bg-white py-[57px] px-[34px] mt-[54px] mx-[57px] rounded-2xl`
+const examStyles = `bg-white py-[32px] px-[24px] rounded-2xl`
 
 const Examinations = () => {
 
@@ -32,33 +33,67 @@ const Examinations = () => {
             end: "3:00PM",
             duration: "3 hours",
             status: "scheduled"
+        },
+        {
+            id: "def",
+            subject: "Biology",
+            examType: "Examination",
+            chapters: "1-8",
+            topics: ["photosynthesis and its importance to plants"],
+            date: "2025-08-05",
+            start: "12:00PM",
+            end: "3:00PM",
+            duration: "3 hours",
+            status: "scheduled"
+        },
+        {
+            id: "def",
+            subject: "Biology",
+            examType: "Examination",
+            chapters: "1-8",
+            topics: ["photosynthesis and its importance to plants"],
+            date: "2025-08-05",
+            start: "12:00PM",
+            end: "3:00PM",
+            duration: "3 hours",
+            status: "scheduled"
+        },
+        {
+            id: "def",
+            subject: "Biology",
+            examType: "Examination",
+            chapters: "1-8",
+            topics: ["photosynthesis and its importance to plants"],
+            date: "2025-08-05",
+            start: "12:00PM",
+            end: "3:00PM",
+            duration: "3 hours",
+            status: "scheduled"
         }
     ]
 
     return (
             <main className={`w-auto h-auto bg-white ${examStyles} `}>
-                <ExaminationsNavigation />
-                <section className="w-full mt-[54px] space-y-[20px] ">
+                <section className="w-full grid grid-cols-3 gap-[48px] ">
                 {
                     examData.map((data) => 
                         <Card cardStyle={examCard} key={data.id}>
-                            <section className="w-full flex justify-between">
-                                <div className="w-[406px] space-y-[6px] ">
-                                    <Card.Title titleStyle={examTitle}>{data.subject} - {data.examType}</Card.Title>
-                                    <Card.Info infoStyle={examInfo}>Chapters {data.chapters}: {data.topics.join(", ")}
-                                    </Card.Info>
-                                </div>
+                            <Card.Icon ImgSrc={subjectImg} ></Card.Icon>
+                            <section className="w-full flex justify-between items-center">
+                                <Card.Title titleStyle={examTitle}>{data.subject}</Card.Title>
                                 <Card.Status statusStyle={examStatus}>{data.status}</Card.Status>
                             </section>
-                            <section className="w-full flex justify-between pt-[22px] pb-[24px] text-[1.0625rem] text-black font-medium">
-                                <Card.Date>{data.date}</Card.Date>
-                                <Card.Time>{data.start} - {data.end}</Card.Time>
-                                <Card.Duration>{data.duration}</Card.Duration>
+                            <section className="w-full flex justify-between items-center pt-[22px] pb-[24px] text-[1.0625rem] text-black font-medium">
+                                <div className="flex gap-x-[8px] items-center text-[#858688] ">
+                                    <Calendar color="#216388" width={16} height={16}/>
+                                    <Card.Date>Date . {data.date}</Card.Date>
+                                </div>
+                                <div className="flex gap-x-[8px] items-center text-[#858688] ">
+                                    <Clock color="#216388" width={16} height={16}/>
+                                    <Card.Time>{data.start}</Card.Time>
+                                </div>
                             </section>
-                            <section className="w-[242px] h-[53px] flex justify-between font-semibold text-[#216388]">
-                                <Button buttonStyle={examButton}>Back</Button>
-                                <Button buttonStyle={examButton}>Prepare</Button>
-                            </section>
+                            <Button buttonStyle={examButton}>Start Examination</Button>
                         </Card>
                     )
                 }
