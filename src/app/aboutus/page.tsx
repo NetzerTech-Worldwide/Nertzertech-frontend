@@ -107,41 +107,31 @@ function VisionInfoCard({ card }: { card: VisionCard }) {
 export default function AboutUsPage() {
   return (
     <div className={`${inter.className} min-h-screen bg-[#e8eef3] text-[#2f3a44]`}>
-      <header className="sticky top-0 z-40 border-b border-[#d7e3ec] bg-[#f4f8fb]/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <Image
-              src={logoImage}
-              alt="NetzerTech"
-              width={500}
-              height={500}
-              className="h-10 w-10 sm:h-12 sm:w-12"
-              priority
-            />
-            <span className={`${logoFont.className} text-base font-semibold tracking-normal text-[#2b85bc] sm:text-[1.05rem]`}>
-              NetzerTech
-            </span>
+      <header className="sticky top-0 z-50 border-b border-[#d5e3ee] bg-[#f4f8fb]/95 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src={logoImage} alt="NetzerTech" width={52} height={52} className="h-10 w-10" priority />
+            <span className="text-[24px] font-bold text-[#2b85bc]">NetzerTech</span>
           </Link>
 
-          <nav className="hidden items-center gap-10 text-xs font-medium text-[#445766] md:flex">
-            <Link className="transition hover:text-[#277cb3]" href="/">
+          <nav className="hidden items-center gap-10 text-[15px] font-medium text-[#425e73] md:flex">
+            <Link className="transition hover:text-[#2b85bc]" href="/">
               Home
             </Link>
-            <Link className="relative text-[#277cb3]" href="/aboutus">
+            <Link className="transition hover:text-[#2b85bc]" href="/aboutus">
               About
-              <span className="absolute left-1/2 top-full mt-1 h-0 w-0 -translate-x-1/2 border-x-[5px] border-t-[7px] border-x-transparent border-t-[#277cb3]" />
             </Link>
-            <Link className="transition hover:text-[#277cb3]" href="/#features">
+            <Link className="transition hover:text-[#2b85bc]" href="/features">
               Features
             </Link>
-            <Link className="transition hover:text-[#277cb3]" href="/#footer">
+            <Link className="transition hover:text-[#2b85bc]" href="/#contact">
               Contact Us
             </Link>
           </nav>
 
           <Link
-            href="/#footer-hero"
-            className="rounded-2xl bg-[#2b85bc] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#2475a6]"
+            href="/#get-started"
+            className="rounded-2xl bg-[#2b85bc] px-6 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[#216b96]"
           >
             Get Started
           </Link>
@@ -328,10 +318,10 @@ export default function AboutUsPage() {
               <Link href="/aboutus" className="transition hover:text-white">
                 About Us
               </Link>
-              <Link href="/#features" className="transition hover:text-white">
+              <Link href="/features" className="transition hover:text-white">
                 Features
               </Link>
-              <Link href="/#footer-hero" className="transition hover:text-white">
+              <Link href="/#get-started" className="transition hover:text-white">
                 Get Started
               </Link>
             </div>
