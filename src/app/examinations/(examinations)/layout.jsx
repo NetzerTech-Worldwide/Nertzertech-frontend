@@ -1,7 +1,5 @@
-import Image from "next/image"
-import searchIcon from "../../../public/_assets/search-icon.svg"
 import { Lato } from "next/font/google"
-import { ExaminationsNavigation } from "../_components/examination/examinationsNavigation"
+import { ExaminationsNavigation } from "../../_components/examination/examinationsNavigation"
 
 const lato = Lato({
     weight: ["100", "400", "700"],
@@ -12,11 +10,11 @@ export default function ExaminationsLayout ({ children }) {
 
     return (
         <main className={`w-full h-auto bg-[#FBFEFF] ${lato.className} pb-20 pr-[55px] pl-[40px] pt-[32px]`} >
-            <section className="border-2 border-[#F2F4F7] rounded-t-[16px] ">
+            <section className="">
                 <section>
                     <ExaminationsNavigation />
                 </section>
-                <section>
+                <section className="border-2 border-[#F2F4F7] rounded-b-[16px] ">
                     {children}
                 </section>
             </section>
