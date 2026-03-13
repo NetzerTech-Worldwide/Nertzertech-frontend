@@ -7,6 +7,7 @@ export const Footer = () => {
         {
             page: "About Us",
             path: "/aboutus"
+
         }, 
         {
             page: "Features",
