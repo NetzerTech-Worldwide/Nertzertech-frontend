@@ -1,19 +1,26 @@
 'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Eye, EyeOff } from "lucide-react";
-import HeroSection from '../../../_components/authHeroSection';
+import { Eye, EyeOff, X } from "lucide-react";
+// import { useRouter } from 'next/navigation';
+import HeroSection from '../../../../_components/authHeroSection';
+import { loginParent } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/parentOne.png'
+import { useRouter } from 'next/navigation';
+import PinSetupModal from '../../../../_components/pinSetupModal';
 
 
 const LoginInterface: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
+    email: '',
     studentId: '',
     password: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -26,8 +33,8 @@ const LoginInterface: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
     }
 
     if (!formData.studentId.trim()) {
@@ -44,49 +51,55 @@ const LoginInterface: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     setIsLoading(true);
-    setTimeout(() => {
-      console.log('Login submitted:', formData);
+    try {
+      const response = await loginParent(formData);
+
+      // Handle successful login
+      console.log('Login successful:', response);
+      setShowPinModal(true);
+      
+      // Store token if provided
+      if (response.token) {
+        localStorage.setItem('authToken', response.token);
+        // or use cookies for better security
+      }
+
+    } catch (error) {
+      // Handle errors
+      setErrors(prev => ({
+        ...prev,
+        submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
+      }));
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
+    router.push('/schools/secondarySchool/parent/parentForgetPassword')
+  };
+
+  const handlePinSetupClose = () => {
+    setShowPinModal(false);
+    router.push('/schools/secondarySchool/parent/dashboard');
+  };
+
+  const handlePinSetupSuccess = () => {
+    setShowPinModal(false);
+    router.push('/schools/secondarySchool/parent/dashboard');
   };
 
   return (
     <div className="h-fit lg:h-screen flex">
-      {/* <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')`,
-          }}
-        />
-        <div className="relative z-10 p-12 py-5 text-white h-full w-full">
-          <div>
-            <div>
-              <Image src="/_assets/logo.png" alt="NetzerTech Logo" width={150} height={150} />
-            </div>
-            <div className="max-w-md absolute bottom-7">
-              <h1 className="text-2xl font-bold mb-4 leading-tight">
-                Stay organized, stay ahead.
-              </h1>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                From timetables to exams, NetzerTech helps you focus on what truly matters during.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <HeroSection
-        imageSrc="/_assets/logo.png"
-        heading="Stay organized, stay ahead."
-        description="From timetables to exams, NetzerTech helps you focus on what truly matters."
+        imageSrc={heroImage}
+        heading="Stay informed and involved. "
+        description="Track your child's academic progress, pay fees, and receive instant updates."
       />
 
       <div className="flex-1 flex items-center justify-center bg-[#F3FAFF]">
@@ -104,26 +117,6 @@ const LoginInterface: React.FC = () => {
 
             <div className="space-y-3">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter Full Name"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-                )}
-              </div>
-
-              <div>
                 <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">
                   Student ID
                 </label>
@@ -140,6 +133,26 @@ const LoginInterface: React.FC = () => {
                 />
                 {errors.studentId && (
                   <p className="mt-1 text-sm text-red-500">{errors.studentId}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter Email"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">{errors.email}</p>
                 )}
               </div>
 
@@ -201,15 +214,25 @@ const LoginInterface: React.FC = () => {
               </button>
             </div>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
-              <a href="#" className="text-cyan-600 hover:text-cyan-700 font-medium">
-                Sign up
-              </a>
-            </div>
+            {errors.submit && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{errors.submit}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* PIN Setup Modal */}
+      <PinSetupModal
+        isOpen={showPinModal}
+        onClose={handlePinSetupClose}
+        onSuccess={handlePinSetupSuccess}
+        userData={{
+          email: formData.email,
+          studentId: formData.studentId
+        }}
+      />
     </div>
   );
 };

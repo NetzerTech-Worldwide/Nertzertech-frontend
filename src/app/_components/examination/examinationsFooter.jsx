@@ -46,7 +46,7 @@ export const ExaminationsFooter = () => {
             <section className="grid grid-cols-4 gap-x-[39px] mt-[30px]  ">
                 {
                     cardContent.map((content) =>
-                        <Link href={`${baseURL}/${content.link}`}
+                        <Link href={`/${content.link}`}
                             key={content.link}
                             className={`${examFooterCardContainer}`}>
                             <Card cardStyle={examFooterCard}>

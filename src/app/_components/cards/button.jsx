@@ -1,7 +1,21 @@
-export const Button = ({ children, buttonStyle }) => {
+"use client"
+
+import { useRouter } from "next/navigation"
+
+export const Button = ({ children, buttonStyle, redirect, type }) => {
+    const router = useRouter()
+    const handleClick = () => {
+        if (redirect) {
+            router.push(`${redirect}`)
+        }
+    }
 
     return (
-        <button className={`${buttonStyle} cursor-pointer`} >
+        <button 
+            onClick={handleClick}
+            className={`${buttonStyle} cursor-pointer`}
+            type={type} 
+        >
             {children}
         </button>
     )
