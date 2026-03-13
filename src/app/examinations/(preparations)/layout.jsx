@@ -1,3 +1,5 @@
+"use client"
+
 import { Lato } from "next/font/google"
 import { PreparationNavigation } from "../../_components/examination/preparationNavigation"
 import { ExamDetails } from "../../_components/examination/examDetails"
@@ -7,6 +9,7 @@ import profilePhoto from "../../../../public/_assets/profile-photo.png"
 import { Button } from "../../_components/cards/button"
 import { ArrowLeft } from "lucide-react"
 import { TestTips } from "../../_components/examination/testTips"
+import { useRouter } from "next/navigation"
 
 const lato = Lato({
     weight: ["100", "400", "700"],
@@ -14,6 +17,7 @@ const lato = Lato({
 })
 
 export default function PreparationLayout ({ children }) {
+    const router = useRouter()
     
     return (
         <main className={`bg-[#FBFEFF] ${lato.className}`}>
@@ -35,7 +39,8 @@ export default function PreparationLayout ({ children }) {
                     </div>
                 </ExamHeader>
             </section>
-            <Button buttonStyle={"flex items-center gap-x-[16px] text-white font-semibold py-[8px] px-[16px] mt-[29px] mb-[0px] ml-[39px] bg-[#216388] rounded-[8px] "}>
+            <Button onClick={() => router.back()}
+                buttonStyle={"flex items-center gap-x-[16px] text-white font-semibold py-[8px] px-[16px] mt-[29px] mb-[0px] ml-[39px] bg-[#216388] rounded-[8px] "}>
                 <ArrowLeft />
                 <span>Back</span>
             </Button>

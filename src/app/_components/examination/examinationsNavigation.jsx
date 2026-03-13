@@ -2,8 +2,17 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useContext } from "react"
+import { examContext } from "../../../../lib/context/examContext"
 
 export const ExaminationsNavigation = () => {
+    const { exams } = useContext(examContext)
+    const upcoming = exams?.filter((data) => {
+        return data.status === "pending"
+    })
+    const completed = exams?.filter((data) => {
+        return data.status === "completed"
+    })
 
     const baseStyles = `flex justify-center items-center font-medium text-xl  py-[38px] px-[24px] text-[#666668]`
     const activeStyles = `flex justify-center items-center font-semibold text-xl  py-[38px] px-[24px] text-[#216388] border-b-3 border-[#216388]`
@@ -18,7 +27,7 @@ export const ExaminationsNavigation = () => {
             >
                 All Examinations 
                 <span className={notStyles}>
-                    9
+                    {exams ? exams.length : 0}
                 </span>
             </Link>
             <Link href={`/examinations/upcoming`}
@@ -26,7 +35,7 @@ export const ExaminationsNavigation = () => {
             >
                 Upcoming
                 <span className={notStyles}>
-                    3
+                    {upcoming ? upcoming.length : 0}
                 </span>
             </Link>
             <Link href={`/examinations/submitted`}
@@ -34,7 +43,7 @@ export const ExaminationsNavigation = () => {
             >
                 Submitted
                 <span className={notStyles}>
-                    3
+                    {completed ? completed.length : 0}
                 </span>
             </Link>
         </nav>

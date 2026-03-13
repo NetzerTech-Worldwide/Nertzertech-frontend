@@ -1,3 +1,5 @@
+"use client"
+
 import { Lato } from "next/font/google"
 import { ExaminationsNavigation } from "../../_components/examination/examinationsNavigation"
 
@@ -7,15 +9,17 @@ const lato = Lato({
 })
 
 export default function ExaminationsLayout ({ children }) {
-
+    
     return (
-        <main className={`w-full h-auto bg-[#FBFEFF] ${lato.className} pb-20 pr-[55px] pl-[40px] pt-[32px]`} >
+        <main className={`w-full min-h-screen bg-[#FBFEFF] ${lato.className} pb-20 pr-[55px] pl-[40px] pt-[32px]`} >
             <section className="">
                 <section>
-                    <ExaminationsNavigation />
+                    <ExaminationsNavigation  />
                 </section>
                 <section className="border-2 border-[#F2F4F7] rounded-b-[16px] ">
-                    {children}
+                    {/* <dataContext.Provider value={exams}> */}
+                        {children}
+                    {/* </dataContext.Provider> */}
                 </section>
             </section>
         </main>

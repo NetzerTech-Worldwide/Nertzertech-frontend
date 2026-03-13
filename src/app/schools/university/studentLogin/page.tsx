@@ -48,7 +48,7 @@ const LoginInterface: React.FC = () => {
     if (!validateForm()) return;
     setIsLoading(true);
     setTimeout(() => {
-      console.log('Login submitted:', formData);
+      console.log('', formData);
       setIsLoading(false);
     }, 1500);
   };
@@ -84,28 +84,8 @@ const LoginInterface: React.FC = () => {
 
             <div className="space-y-3">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter Full Name"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-                )}
-              </div>
-
-              <div>
                 <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Student ID
+                  Student ID/ Matric No.
                 </label>
                 <input
                   type="text"
@@ -191,7 +171,7 @@ const LoginInterface: React.FC = () => {
         </div>
       </div>
 
-      {/* Popup Modal */}
+      
       {showPopup && (
         <div className="fixed inset-0 bg-gray-600/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-fade-in">
@@ -203,10 +183,10 @@ const LoginInterface: React.FC = () => {
               <X size={20} />
             </button>
             
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-cyan-900 mb-2">
               Important Notice
             </h3>
-            
+            <hr className='text-gray-500 mb-2'/>
             <p className="text-sm mb-6 leading-relaxed">
               Please use your matric number and 1234567 as the default password. 
              <span className='font-bold'>Remember to change your password once you login to avoid compromise of your profile</span>

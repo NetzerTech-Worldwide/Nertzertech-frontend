@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 
-export const Icon = ({ iconStyle, ImgSrc, ImgWidth, ImgHeight }) => {
+export const Icon = ({ iconStyle, ImgSrc, ImgWidth, ImgHeight, type }) => {
 
     return (
         <Image 
@@ -9,7 +9,8 @@ export const Icon = ({ iconStyle, ImgSrc, ImgWidth, ImgHeight }) => {
             alt="image"
             width={ImgWidth}
             height={ImgHeight}
-            className={`${iconStyle}`}
+            className={`${type === "background" ? "object-cover rounded-[inherit] " : iconStyle}`}
+            fill={type === "background" && true}
         />
     )
 }
