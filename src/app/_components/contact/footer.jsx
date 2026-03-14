@@ -6,7 +6,8 @@ export const Footer = () => {
     const quickLinks = [ 
         {
             page: "About Us",
-            path: "/about"
+            path: "/aboutus"
+
         }, 
         {
             page: "Features",

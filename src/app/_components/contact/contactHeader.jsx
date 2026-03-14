@@ -2,6 +2,7 @@ import Image from "next/image"
 import headerImg from "../../../../public/_assets/contact-page-header.png"
 import { ChevronRight } from "lucide-react"
 import { Button } from "../cards/button"
+import Link from "next/link"
 
 export const ContactHeader = () => {
 
@@ -19,14 +20,14 @@ export const ContactHeader = () => {
                     Contact Us
                 </h1>
                 <div className="flex gap-x-[24px] items-center text-2xl font-medium">
-                    <Button redirect={"/"}
-                        buttonStyle={"flex items-center gap-x-[8px] "}>
+                    <Link href={"/"}
+                        className={"flex items-center gap-x-[8px] "}>
                         Home 
                         <ChevronRight /> 
-                    </Button>
-                    <Button redirect={"/about"}>
+                    </Link>
+                    <Link href={"/aboutus"}>
                         About Us
-                    </Button>
+                    </Link>
                 </div>
             </section>
         </main>

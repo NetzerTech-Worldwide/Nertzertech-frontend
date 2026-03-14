@@ -7,8 +7,9 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextArea } from "./textArea"
-import { options } from "../../../../lib/utils/options"
-import { submitForm } from "../../../../lib/utils/submitForm"
+import { options } from "../../../../lib/options"
+import { submitForm } from "../../../../lib/submitForm"
+
 
 export const lato = Lato({
     weight: ["100", "300", "400", "700"],
@@ -28,7 +29,7 @@ export const ContactForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({resolver: yupResolver(schema)})
     
     const submitContactForm = (data) => {
-        const url = process.env.NEXT_PUBLIC_CONTACT_FORM_URL
+        const url = `${process.env.NEXT_PUBLIC_BASE_URL}contact/submit`
         submitForm(url, options(data))
     }
     

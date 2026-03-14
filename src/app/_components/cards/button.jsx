@@ -1,20 +1,11 @@
-"use client"
-
-import { useRouter } from "next/navigation"
-
-export const Button = ({ children, buttonStyle, redirect, type }) => {
-    const router = useRouter()
-    const handleClick = () => {
-        if (redirect) {
-            router.push(`${redirect}`)
-        }
-    }
+export const Button = ({ children, buttonStyle, type, onClick, disable }) => {    
 
     return (
         <button 
-            onClick={handleClick}
+            onClick={onClick}
             className={`${buttonStyle} cursor-pointer`}
-            type={type} 
+            type={type}
+            disabled={disable} 
         >
             {children}
         </button>

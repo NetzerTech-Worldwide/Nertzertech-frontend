@@ -5,7 +5,7 @@ import logo from "../../../../public/_assets/logo-blue.png"
 import Link from "next/link"
 import { Button } from "../cards/button"
 import { Lato } from "next/font/google"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import polygon from "../../../../public/_assets/Polygon.svg"
 
 
@@ -15,6 +15,7 @@ const lato = Lato({
 })
 
 export const Navbar = () => {
+    const router = useRouter()
     const pathName = usePathname()
     const navLinks = [
         {
@@ -23,7 +24,7 @@ export const Navbar = () => {
         }, 
         {
             page: "About",
-            path: "/about"
+            path: "/aboutus"
         }, 
         {
             page: "Features",
@@ -47,7 +48,7 @@ export const Navbar = () => {
             <ul className="w-auto h-auto hidden xl:flex gap-x-[78px] text-xl font-medium">
             {
                 navLinks.map((item) => 
-                    <li key={item.page} className={`${pathName}` === `${item.path}` ? "text-[#2371B4] relative flex justify-center" : "text-[#666668]" }>
+                    <li key={item.page} className={`${pathName}` === `${item.path}` ? "text-[#216388] relative flex justify-center" : "text-[#666668] hover:text-[#216388] " }>
                         <Link href={item.path}>{item.page}</Link>
                         {
                             pathName === `${item.path}` &&
@@ -64,7 +65,7 @@ export const Navbar = () => {
             }
             </ul>
             <Button 
-                redirect={"get-started"}
+                onClick={() => router.push("/get-started")}
                 buttonStyle={`w-[190px] h-auto px-[19px] py-[22px] text-xl text-white font-semibold bg-[#2A7EAF] rounded-[20px] duration-300 hover:bg-[#9FCAE2] active:bg-[#2A7EAF] ${lato.className}`}
             >
                 Get Started

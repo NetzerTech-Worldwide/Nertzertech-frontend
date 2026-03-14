@@ -64,5 +64,3 @@ export const ContactCard = () => {
         </Card>
     )
 }
-
-// bg-linear-[180deg,rgba(67,154,205,0.8544)_0%,rgba(25,76,106,0.89)_50.09%]
