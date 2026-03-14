@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { AttendanceStats } from "./_components/attendanceStats";
-import { AttendanceTabs } from "./_components/attendancetabs";
-import { MonthlyAttendanceTrend } from "./_components/monthlyattendancetrend";
-import { AttendanceBreakdown } from "./_components/attendancebreakdown";
-import { TodaysStatus } from "./_components/todaysstatus";
-import { Achievements } from "./_components/achievements";
-import { Notifications } from "./_components/notifications";
-import { AttendanceCalendar } from "./_components/attendacecalendar";
-import { AttendanceSubjects } from "./_components/advancesubjects";
-import { AttendanceHistory } from "./_components/attendancehistory";
+import { AttendanceStats } from "../_components/attendanceStats";
+import { AttendanceTabs } from "../_components/attendancetabs";
+import { MonthlyAttendanceTrend } from "../_components/monthlyattendancetrend";
+import { AttendanceBreakdown } from "../_components/attendancebreakdown";
+import { TodaysStatus } from "../_components/todaysstatus";
+import { Achievements } from "../_components/achievements";
+import { Notifications } from "../_components/notifications";
+import { AttendanceCalendar } from "../_components/attendacecalendar";
+import { AttendanceSubjects } from "../_components/advancesubjects";
+import { AttendanceHistory } from "../_components/attendancehistory";
 import { ArrowLeft, Download, Printer } from "lucide-react";
 
 type Tab = "overview" | "calendar" | "subjects" | "history";

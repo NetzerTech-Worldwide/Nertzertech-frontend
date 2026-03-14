@@ -25,7 +25,6 @@ export const loginStudent = async (credentials: {
     throw new Error(data.message || "Login failed");
   }
 
-  // store token if backend returns one
   if (data.token) {
     localStorage.setItem("token", data.token);
   }

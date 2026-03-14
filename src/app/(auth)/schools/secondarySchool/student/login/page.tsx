@@ -48,26 +48,14 @@ const LoginInterface: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  e.preventDefault();
+  const handleSubmit = async () => {
   if (!validateForm()) return;
   
   setIsLoading(true);
   try {
-    const response = await loginStudent(formData);  
-    // Handle successful login
-    console.log('Login successful:', response);
-    
-    // Store token if provided
-    if (response.token) {
-      localStorage.setItem('authToken', response.token);
-    }
-    
-   
+    await loginStudent(formData);  
     router.push('/dashboard'); 
-    
   } catch (error) {
-    // Handle errors
     setErrors(prev => ({
       ...prev,
       submit: error instanceof Error ? error.message : 'Login failed. Please try again.'

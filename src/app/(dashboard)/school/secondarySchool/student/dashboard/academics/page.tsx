@@ -2,11 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Search, BookOpen, ChevronRight, X, Check } from "lucide-react";
+import AcademicsNavigation from "./_components/academicsNavigation";
 
-const SUBJECTS_BASE = "/school/secondarySchool/student/dashboard/academics";
 type CatalogItem = {
   id: string;
   name: string;
@@ -42,20 +40,6 @@ function StatCard({ label, value, iconSrc, iconAlt = "" }: { label: string; valu
   );
 }
 
-function FilterPill({ href, label }: { href: string; label: string }) {
-  const pathname = usePathname();
-  const active = pathname === href || pathname.startsWith(href + "/");
-  return (
-    <Link
-      href={href}
-      aria-current={active ? "page" : undefined}
-      className={`rounded-full border px-3 py-1.5 text-xs leading-none transition
-      ${active ? "bg-[#2A7EAF] text-white border-[#2A7EAF]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
-    >
-      {label}
-    </Link>
-  );
-}
 
 type SimpleSubject = {
   id: string;
@@ -126,7 +110,7 @@ function SubjectPickerModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60]">
+    <div className="fixed inset-0 z-60">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="absolute inset-0 grid place-items-center p-4 sm:p-6">
         <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-5 shadow-xl">
@@ -251,17 +235,6 @@ function SelectedSubjectsTable({ ids, student }: { ids: string[]; student: { nam
   );
 }
 
-const TOP_FILTERS = [
-  { label: "Subject", href: SUBJECTS_BASE },
-  { label: "Classroom", href: `${SUBJECTS_BASE}/classroom` },
-  { label: "Assignment", href: `${SUBJECTS_BASE}/assignment` },
-  { label: "Examinations", href: `${SUBJECTS_BASE}/examinations` },
-  { label: "Records", href: `${SUBJECTS_BASE}/records` },
-  { label: "Attendance", href: `${SUBJECTS_BASE}/attendance` },
-  { label: "Timetable", href: `${SUBJECTS_BASE}/timetable` },
-  { label: "Library", href: `${SUBJECTS_BASE}/library` },
-] as const;
-
 const SIMPLE_SUBJECTS: SimpleSubject[] = SUBJECT_CATALOG.slice(0, 9).map((c, i) => ({
   id: c.id,
   name: c.name,
@@ -317,11 +290,7 @@ export default function AcademicsPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {TOP_FILTERS.map(({ label, href }) => (
-            <FilterPill key={href} href={href} label={label} />
-          ))}
-        </div>
+        <AcademicsNavigation/>
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           <StatCard label="Enrolled Subjects" value="10" iconSrc="/_assets/Vector3.png" iconAlt="Enrolled subjects" />
