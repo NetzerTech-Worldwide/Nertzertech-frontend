@@ -11,6 +11,7 @@ import { AttendanceCalendar } from "../_components/attendacecalendar";
 import { AttendanceSubjects } from "../_components/advancesubjects";
 import { AttendanceHistory } from "../_components/attendancehistory";
 import { ArrowLeft, Download, Printer } from "lucide-react";
+import AcademicsNavigation from "../_components/academicsNavigation";
 
 type Tab = "overview" | "calendar" | "subjects" | "history";
 
@@ -19,26 +20,39 @@ const AttendancePage = () => {
 
   return (
     <div className="flex flex-col min-h-full bg-gray-50 p-4 md:p-6 gap-4 md:gap-5 overflow-auto">
+      
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+      <div className="flex flex-col gap-3">
+        
+        {/* Row 1: Back button */}
         <div>
-          <button className="flex items-center gap-1 text-sm bg-[#216388] px-3 py-2 rounded mb-3 text-white">
+          <button className="flex items-center gap-1 text-sm bg-[#216388] px-3 py-2 rounded text-white w-fit">
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <h1 className="text-lg md:text-xl font-bold text-gray-800">Attendance</h1>
-          <p className="text-xs text-gray-400">Hello Damisi Adeyemi, here's your attendance summary</p>
         </div>
-        <div className="flex gap-2 sm:flex-shrink-0">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors bg-white">
-            <Printer className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Print View</span>
-          </button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Export Report</span>
-          </button>
+
+        {/* Row 2: Navigation pills */}
+        <AcademicsNavigation />
+
+        {/* Row 3: Title + Buttons */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-lg md:text-xl font-bold text-gray-800">Attendance</h1>
+            <p className="text-xs text-gray-400">Monitor your attendance record and statistics</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors bg-white">
+              <Printer className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Print View</span>
+            </button>
+            <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[#216388] text-white rounded-lg hover:bg-[#1a5070] transition-colors">
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Export Report</span>
+            </button>
+          </div>
         </div>
+
       </div>
 
       {/* Stats Strip — 2 cols on mobile, 4 on desktop */}
@@ -55,13 +69,13 @@ const AttendancePage = () => {
         <div className="p-3 md:p-4">
           {activeTab === "overview" && (
             <div className="flex flex-col gap-4">
-              {/* Row 1: Trend + Breakdown — stacked on mobile, side by side on lg */}
+              {/* Row 1: Trend + Breakdown */}
               <div className="flex flex-col lg:flex-row gap-4">
                 <MonthlyAttendanceTrend />
                 <AttendanceBreakdown />
               </div>
 
-              {/* Row 2: Status + Achievements + Notifications — stacked on mobile */}
+              {/* Row 2: Status + Achievements + Notifications */}
               <div className="flex flex-col md:flex-row gap-4">
                 <TodaysStatus />
                 <Achievements />
@@ -75,6 +89,7 @@ const AttendancePage = () => {
           {activeTab === "history" && <AttendanceHistory />}
         </div>
       </div>
+
     </div>
   );
 };

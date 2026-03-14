@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Lightbulb, Lock } from "lucide-react";
-
-const SUBJECTS_BASE = "/schools/secondarySchool/student/academics";
+import AcademicsNavigation from "../_components/academicsNavigation";
 
 type RoadmapItem = {
   id: number;
@@ -21,21 +19,6 @@ const ROADMAP: RoadmapItem[] = [
   { id: 4, title: "Biology Practical", duration: "5 Weeks", status: "locked", progress: 0 },
 ];
 
-function FilterPill({ href, label }: { href: string; label: string }) {
-  const pathname = usePathname();
-  const isActive = pathname === href || (href !== SUBJECTS_BASE && pathname?.startsWith(href));
-
-  return (
-    <Link
-      href={href}
-      aria-current={isActive ? "page" : undefined}
-      className={`rounded-full border px-3 py-1.5 text-xs leading-none transition
-        ${isActive ? "bg-[#2A7EAF] text-white border-[#2A7EAF]" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"}`}
-    >
-      {label}
-    </Link>
-  );
-}
 
 function StatusChip({ status }: { status: RoadmapItem["status"] }) {
   if (status === "completed") {
@@ -140,17 +123,7 @@ export default function ClassroomPage() {
           </div>
         </div>
       </div>
-
-      <div className="flex flex-wrap gap-2">
-        <FilterPill href={SUBJECTS_BASE} label="Subject" />
-        <FilterPill href={`${SUBJECTS_BASE}/classroom`} label="Classroom" />
-        <FilterPill href={`${SUBJECTS_BASE}/assignment`} label="Assignment" />
-        <FilterPill href={`${SUBJECTS_BASE}/examinations`} label="Examinations" />
-        <FilterPill href={`${SUBJECTS_BASE}/records`} label="Records" />
-        <FilterPill href={`${SUBJECTS_BASE}/attendance`} label="Attendance" />
-        <FilterPill href={`${SUBJECTS_BASE}/timetable`} label="Timetable" />
-        <FilterPill href={`${SUBJECTS_BASE}/library`} label="Library" />
-      </div>
+      <AcademicsNavigation/>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-5">
         <div className="mb-4">

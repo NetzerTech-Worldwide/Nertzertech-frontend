@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import HeroSection from '../../../../../_components/authHeroSection';
 import { loginStudent } from '../../../../../utils/authApi';
 
-
-
 const LoginInterface: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -53,8 +51,13 @@ const LoginInterface: React.FC = () => {
   
   setIsLoading(true);
   try {
-    await loginStudent(formData);  
-    router.push('/dashboard'); 
+    const response = await loginStudent(formData);
+
+    if (response.mustChangePassword) {
+      router.push('/schools/secondarySchool/student/change-password');
+    } else {
+      router.push('/schools/secondarySchool/student/dashboard');
+    }
   } catch (error) {
     setErrors(prev => ({
       ...prev,

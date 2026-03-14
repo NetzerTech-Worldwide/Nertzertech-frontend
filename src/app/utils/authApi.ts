@@ -7,27 +7,14 @@ export const loginStudent = async (credentials: {
   fullName: string;
   password: string;
 }) => {
-  const response = await fetch(
-    `${baseUrl}/auth/login/student/secondary`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
-      },
-      body: JSON.stringify(credentials),
-    }
-  );
+  const response = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+  });
 
   const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Login failed");
-  }
-
-  if (data.token) {
-    localStorage.setItem("token", data.token);
-  }
+  if (!response.ok) throw new Error(data.message || 'Login failed');
 
   return data;
 };
