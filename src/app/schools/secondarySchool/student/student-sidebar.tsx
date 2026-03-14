@@ -9,6 +9,7 @@ import {
   LayoutDashboard, BookOpen, GraduationCap, MessageSquare, Users,
   Trophy, Headphones, CheckSquare, User, Menu, ChevronRight, LogOut, X
 } from "lucide-react";
+import { clearStoredAuth, getStoredToken, logoutCurrentUser } from "@/lib/netzertech-api";
 
 const BASE = "/schools/secondarySchool/student";
 
@@ -29,6 +30,19 @@ export const NAV: Item[] = [
 function normalize(path: string) {
   const t = path.replace(/\/+$/g, "");
   return t.length ? t : "/";
+}
+
+async function handleLogout() {
+  const token = getStoredToken();
+  if (token) {
+    try {
+      await logoutCurrentUser(token);
+    } catch {
+      // Proceed with local logout even if server logout fails.
+    }
+  }
+  clearStoredAuth();
+  window.location.href = "/schools/secondarySchool/studentLogin";
 }
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
@@ -75,7 +89,7 @@ export default function StudentSidebar() {
           <div className="flex h-full flex-col gap-4">
             <SidebarNav />
             <div className="mt-auto pt-2">
-              <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
+              <button onClick={handleLogout} className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
                 <LogOut className="h-4 w-4" />
                 <span>Log Out</span>
               </button>
@@ -143,7 +157,7 @@ export function StudentSidebarMobile({
           <div className="-mt-13 flex-1 flex flex-col gap-3 pt-1">
             <SidebarNav onNavigate={onClose} />
             <div className="mt-auto pt-1 pb-1">
-              <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
+              <button onClick={handleLogout} className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-xs font-medium text-[#135D96] hover:bg-sky-50">
                 <LogOut className="h-4 w-4" />
                 <span>Log Out</span>
               </button>

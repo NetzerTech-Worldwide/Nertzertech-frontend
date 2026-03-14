@@ -2,10 +2,13 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 import HeroSection from '../../../_components/authHeroSection';
+import { clearStoredAuth, loginSecondaryStudent, setStoredAuth } from "@/lib/netzertech-api";
 
 
 const LoginInterface: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     studentId: '',
@@ -44,18 +47,43 @@ const LoginInterface: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     setIsLoading(true);
-    setTimeout(() => {
-      console.log('Login submitted:', formData);
+    setErrors((prev) => ({ ...prev, submit: '' }));
+
+    try {
+      const response = await loginSecondaryStudent({
+        fullName: formData.name.trim(),
+        studentId: formData.studentId.trim(),
+        password: formData.password,
+      });
+
+      setStoredAuth(response.accessToken, response.user);
+
+      if (response.mustChangePassword) {
+        router.push('/schools/secondarySchool/student/change-password');
+        return;
+      }
+
+      router.push('/schools/secondarySchool/student/dashboard');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to login. Please try again.';
+      setErrors((prev) => ({ ...prev, submit: message }));
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleForgotPassword = () => {
     console.log('Forgot password clicked');
+  };
+
+  const handleDemoDashboard = () => {
+    clearStoredAuth();
+    router.push('/schools/secondarySchool/student/dashboard');
   };
 
   return (
@@ -199,6 +227,20 @@ const LoginInterface: React.FC = () => {
                   'Login'
                 )}
               </button>
+
+              {errors.submit && (
+                <p className="mt-2 text-sm text-red-500">{errors.submit}</p>
+              )}
+
+              {process.env.NODE_ENV !== "production" && (
+                <button
+                  type="button"
+                  onClick={handleDemoDashboard}
+                  className="w-full border border-cyan-600 text-cyan-700 hover:bg-cyan-50 font-semibold py-3 rounded-lg transition-colors"
+                >
+                  Continue to Dashboard (Demo)
+                </button>
+              )}
             </div>
 
             <div className="mt-6 text-center text-sm text-gray-600">
