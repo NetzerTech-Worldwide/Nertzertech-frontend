@@ -8,12 +8,13 @@ import { examContext } from "../../../../../../lib/context/examContext"
 import { useParams } from "next/navigation"
 import { getOptions } from "../../../../../../lib/options"
 import { useFetchDataWithId } from "../../../../../../lib/hooks"
+import { Button } from "@/app/_components/cards/button"
 
 const Exam = () => {
     const params = useParams()
     const { id } = params
 
-    const { selected, currentQuestion, setCurrentQuestion, setTotalQuestions, setExamDuration } = useContext (examContext)
+    const { selected, currentQuestion, setCurrentQuestion, setTotalQuestions, setSubmitModal, setExamDuration } = useContext (examContext)
 
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}examination/${id}/questions?page=${currentQuestion}&limit=1`
     const token = process.env.NEXT_PUBLIC_TOKEN
@@ -31,7 +32,7 @@ const Exam = () => {
         return Math.floor(progress/question?.total * 100)
     }
 
-    useEffect((question) => {
+    useEffect(() => {
         let set = true
         if (set) {
             setTotalQuestions(question?.total)
@@ -43,6 +44,15 @@ const Exam = () => {
 
     return (
         <main className="w-full">
+            <div className="flex justify-between items-center mt-[24px] mb-[32px]">
+                <h3 className="text-[1.75rem] font-bold">
+                    Examination
+                </h3>
+                <Button onClick={() => setSubmitModal(true)}
+                    buttonStyle={"text-white font-semibold py-[16px] px-[24px] bg-[#216388] hover:bg-[#9FCAE2] active:bg-[#216388] rounded-[10px] "}>
+                    Submit Exam
+                </Button>
+            </div>
             {question ?
                 <section className="mb-[32px] overflow-x-hidden overflow-x-scroll [&::-webkit-scrollbar]:hidden">
                     <PageSelect question={question} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} />

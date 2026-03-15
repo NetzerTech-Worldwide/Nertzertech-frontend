@@ -1,5 +1,3 @@
-"use client"
-
 import { Lato } from "next/font/google"
 import { ExaminationsNavigation } from "../../_components/examination/examinationsNavigation"
 
@@ -17,9 +15,7 @@ export default function ExaminationsLayout ({ children }) {
                     <ExaminationsNavigation  />
                 </section>
                 <section className="border-2 border-[#F2F4F7] rounded-b-[16px] ">
-                    {/* <dataContext.Provider value={exams}> */}
-                        {children}
-                    {/* </dataContext.Provider> */}
+                    {children}
                 </section>
             </section>
         </main>

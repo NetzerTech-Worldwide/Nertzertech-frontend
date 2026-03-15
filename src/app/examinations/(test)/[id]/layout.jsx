@@ -9,7 +9,7 @@ import { TestTips } from "../../../_components/examination/testTips"
 import { ExamModal } from "../../../_components/examination/modal/examModal"
 import { useContext } from "react"
 import { examContext } from "../../../../../lib/context/examContext"
-import { useRouter } from "next/navigation"
+import { BackButton } from "../../../_components/examination/backButton"
 
 const lato = Lato({
     weight: ["100", "400", "700"],
@@ -17,7 +17,6 @@ const lato = Lato({
 })
 
 export default function TestLayout({ children }) {
-    const router = useRouter()
 
     const { setSubmitModal, totalQuestions } = useContext(examContext)
 
@@ -26,11 +25,11 @@ export default function TestLayout({ children }) {
             <ExamHeader title={"Practice Test"} description={totalQuestions === undefined ? "" : totalQuestions}>
                 <Timer title={"Test Timer"} />
             </ExamHeader>
-            <Button onClick={() => router.back()}
-                buttonStyle={"flex items-center gap-x-[16px] text-white font-semibold py-[8px] px-[16px] mt-[29px] ml-[39px] bg-[#216388] hover:bg-[#9FCAE2] active:bg-[#216388] rounded-[8px] "}>
+            <BackButton
+                buttonStyle={"flex items-center gap-x-[16px] text-white font-semibold py-[8px] px-[16px] mt-[29px] ml-[39px] rounded-[8px] "}>
                 <ArrowLeft />
                 <span>Back</span>
-            </Button>
+            </BackButton>
             <section className="flex justify-between items-center mt-[24px] mb-[32px] pr-[55px] pl-[40px]">
                 <h3 className="text-[1.75rem] font-bold">
                     Your Practice Test

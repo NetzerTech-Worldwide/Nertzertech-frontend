@@ -29,7 +29,7 @@ const Test = () => {
         return Math.floor(progress/question?.total * 100)
     }
 
-    useEffect((question) => {
+    useEffect(() => {
         let set = true
         if (set) {
             setTotalQuestions(question?.total)
