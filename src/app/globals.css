@@ -51,3 +51,14 @@ body {
 .landing-float {
   animation: gentle-float 7s ease-in-out infinite;
 }
+
+/* support table styles */
+table thead th {
+  padding: 29px 15px;
+}
+
+table tbody td {
+  padding: 27px 15px;
+  border-bottom: 1px solid #DCDEE1;
+  text-transform: capitalize;
+}
