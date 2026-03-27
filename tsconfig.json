@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "src/app/schools/secondarySchool/student/support/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]
