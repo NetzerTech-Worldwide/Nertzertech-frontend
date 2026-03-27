@@ -16,6 +16,7 @@ export const ExamProvider = ({ children }) => {
     const [submitModal, setSubmitModal] = useState(false)
     const [loadingModal, setLoadingModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
+    const [supportModal, setSupportModal] = useState(false)
 
     const contextValues = {
         selected,
@@ -33,7 +34,9 @@ export const ExamProvider = ({ children }) => {
         examDuration,
         setExamDuration,
         exams,
-        setExams
+        setExams,
+        supportModal,
+        setSupportModal
     }
 
     return <examContext.Provider value={contextValues}>
