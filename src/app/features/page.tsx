@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, Compass, Medal } from "lucide-react";
+import FooterQuickLinks from "@/components/marketing/shared/FooterQuickLinks";
+import MarketingHeader from "@/components/marketing/shared/MarketingHeader";
+import MarketingPageHero from "@/components/marketing/shared/MarketingPageHero";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -96,6 +99,13 @@ const featureSections: FeatureSection[] = [
   },
 ];
 
+const marketingNavItems = [
+  { href: "/", label: "Home" },
+  { href: "/aboutus", label: "About" },
+  { href: "/features", label: "Features" },
+  { href: "/#contact", label: "Contact Us" },
+];
+
 function PopupCard({ title, subtitle, icon, iconClassName, className }: PopupCardProps) {
   const Icon = icon;
 
@@ -180,54 +190,17 @@ function FeatureCard({ section }: { section: FeatureSection }) {
 export default function FeaturesPage() {
   return (
     <div className={`${inter.className} min-h-screen bg-[#e8eff4] text-[#2f3a44]`}>
-      <header className="sticky top-0 z-50 border-b border-[#d5e3ee] bg-[#f4f8fb]/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src={logoImage} alt="NetzerTech" width={52} height={52} className="h-10 w-10" priority />
-            <span className="text-[24px] font-bold text-[#2b85bc]">NetzerTech</span>
-          </Link>
+      <MarketingHeader logoImage={logoImage} navItems={marketingNavItems} ctaHref="/#roles" />
 
-          <nav className="hidden items-center gap-10 text-[15px] font-medium text-[#425e73] md:flex">
-            <Link className="transition hover:text-[#2b85bc]" href="/">
-              Home
-            </Link>
-            <Link className="transition hover:text-[#2b85bc]" href="/aboutus">
-              About
-            </Link>
-            <Link className="transition hover:text-[#2b85bc]" href="/features">
-              Features
-            </Link>
-            <Link className="transition hover:text-[#2b85bc]" href="/#contact">
-              Contact Us
-            </Link>
-          </nav>
-
-          <Link
-            href="/#get-started"
-            className="rounded-2xl bg-[#2b85bc] px-6 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[#216b96]"
-          >
-            Get Started
-          </Link>
-        </div>
-      </header>
-
-      <section className="relative h-[220px] overflow-hidden sm:h-[280px] lg:h-[360px]">
-        <Image
-          src={topHeroImage}
-          alt="Team collaboration"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-[#2a79ad]/55" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-          <h1 className="text-[24px] font-extrabold sm:text-[39px]">Features</h1>
-          <p className="mt-3 text-[13px] sm:text-[15px]">
-            Home <span className="mx-2 text-white/70">&gt;</span> Features
-          </p>
-        </div>
-      </section>
+      <MarketingPageHero
+        image={topHeroImage}
+        title="Features"
+        breadcrumbLabel="Features"
+        sectionClassName="relative h-[220px] overflow-hidden sm:h-[280px] lg:h-[360px]"
+        titleClassName="text-[24px] font-extrabold sm:text-[39px]"
+        breadcrumbClassName="mt-3 text-[13px] sm:text-[15px]"
+        overlayClassName="absolute inset-0 bg-[#2a79ad]/55"
+      />
 
       <main id="features" className="mx-auto w-full max-w-[1240px] space-y-20 px-4 py-14 sm:px-6 lg:space-y-28 lg:px-8 lg:py-20">
         {featureSections.map((section, index) => (
@@ -271,21 +244,7 @@ export default function FeaturesPage() {
             <Image src={logoImage} alt="NetzerTech" width={170} height={40} className="h-9 w-auto brightness-[1.2]" />
             <p className="mt-4 text-[12px] text-white/80">Empowering education through technology</p>
           </div>
-
-          <div>
-            <h3 className="text-[13px] font-semibold text-white">Quick Links</h3>
-            <div className="mt-4 flex flex-col gap-2 text-[12px] text-white/80">
-              <Link href="/aboutus" className="transition hover:text-white">
-                About Us
-              </Link>
-              <Link href="/features" className="transition hover:text-white">
-                Features
-              </Link>
-              <Link href="/#get-started" className="transition hover:text-white">
-                Get Started
-              </Link>
-            </div>
-          </div>
+          <FooterQuickLinks titleClassName="text-[13px] font-semibold text-white" listClassName="mt-4 flex flex-col gap-2 text-[12px] text-white/80" />
         </div>
 
         <div className="mx-auto w-full max-w-[1240px] px-4 pb-6 text-[10px] text-white/75 sm:px-6 lg:px-8">

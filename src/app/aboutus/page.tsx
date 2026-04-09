@@ -1,8 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Chakra_Petch, Inter } from "next/font/google";
 import type { LucideIcon } from "lucide-react";
 import { ShieldCheck, Sparkles, Target, UsersRound } from "lucide-react";
+import FooterQuickLinks from "@/components/marketing/shared/FooterQuickLinks";
+import MarketingHeader from "@/components/marketing/shared/MarketingHeader";
+import MarketingPageHero from "@/components/marketing/shared/MarketingPageHero";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -78,6 +80,13 @@ const whyChooseCards: WhyChooseCard[] = [
   },
 ];
 
+const marketingNavItems = [
+  { href: "/", label: "Home" },
+  { href: "/aboutus", label: "About" },
+  { href: "/features", label: "Features" },
+  { href: "/#contact", label: "Contact Us" },
+];
+
 function SectionTag({ label }: { label: string }) {
   return (
     <span className="inline-flex rounded-full border border-[#b6cddd] bg-[#f1f7fb] px-4 py-1 text-xs font-semibold text-[#245f89]">
@@ -107,48 +116,17 @@ function VisionInfoCard({ card }: { card: VisionCard }) {
 export default function AboutUsPage() {
   return (
     <div className={`${inter.className} min-h-screen bg-[#e8eef3] text-[#2f3a44]`}>
-      <header className="sticky top-0 z-50 border-b border-[#d5e3ee] bg-[#f4f8fb]/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src={logoImage} alt="NetzerTech" width={52} height={52} className="h-10 w-10" priority />
-            <span className="text-[24px] font-bold text-[#2b85bc]">NetzerTech</span>
-          </Link>
+      <MarketingHeader logoImage={logoImage} navItems={marketingNavItems} ctaHref="/#roles" />
 
-          <nav className="hidden items-center gap-10 text-[15px] font-medium text-[#425e73] md:flex">
-            <Link className="transition hover:text-[#2b85bc]" href="/">
-              Home
-            </Link>
-            <Link className="transition hover:text-[#2b85bc]" href="/aboutus">
-              About
-            </Link>
-            <Link className="transition hover:text-[#2b85bc]" href="/features">
-              Features
-            </Link>
-            <Link className="transition hover:text-[#2b85bc]" href="/#contact">
-              Contact Us
-            </Link>
-          </nav>
-
-          <Link
-            href="/#get-started"
-            className="rounded-2xl bg-[#2b85bc] px-6 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[#216b96]"
-          >
-            Get Started
-          </Link>
-        </div>
-      </header>
-
-      <section className="relative h-[220px] overflow-hidden sm:h-[290px] lg:h-[380px]">
-        <Image src={heroImage} alt="Team collaboration" fill priority className="object-cover" sizes="100vw" />
-        <div className="absolute inset-0 bg-[#2a79ad]/58" />
-
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-          <h1 className="text-2xl font-extrabold sm:text-4xl">About Us</h1>
-          <p className="mt-3 text-base font-medium sm:text-lg">
-            Home <span className="mx-2 text-white/70">&gt;</span> About Us
-          </p>
-        </div>
-      </section>
+      <MarketingPageHero
+        image={heroImage}
+        title="About Us"
+        breadcrumbLabel="About Us"
+        sectionClassName="relative h-[220px] overflow-hidden sm:h-[290px] lg:h-[380px]"
+        titleClassName="text-2xl font-extrabold sm:text-4xl"
+        breadcrumbClassName="mt-3 text-base font-medium sm:text-lg"
+        overlayClassName="absolute inset-0 bg-[#2a79ad]/58"
+      />
 
       <main className="mx-auto w-full max-w-[1240px] space-y-14 px-4 py-11 sm:px-6 lg:space-y-16 lg:px-8 lg:py-16">
         <section id="about-us" className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
@@ -311,21 +289,7 @@ export default function AboutUsPage() {
             </div>
             <p className="mt-4 text-[13px] text-white/80">Empowering education through technology</p>
           </div>
-
-          <div>
-            <h3 className="text-base font-semibold text-white">Quick Links</h3>
-            <div className="mt-4 flex flex-col gap-2 text-[13px] text-white/80">
-              <Link href="/aboutus" className="transition hover:text-white">
-                About Us
-              </Link>
-              <Link href="/features" className="transition hover:text-white">
-                Features
-              </Link>
-              <Link href="/#get-started" className="transition hover:text-white">
-                Get Started
-              </Link>
-            </div>
-          </div>
+          <FooterQuickLinks titleClassName="text-base font-semibold text-white" listClassName="mt-4 flex flex-col gap-2 text-[13px] text-white/80" />
         </div>
 
         <div className="mx-auto w-full max-w-[1240px] px-4 pb-6 text-sm text-white/75 sm:px-6 lg:px-8">
