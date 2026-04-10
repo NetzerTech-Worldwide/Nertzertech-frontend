@@ -1,10 +1,10 @@
 import { X } from "lucide-react"
 import { SupportForm } from "../_components/supportForm"
 import { useContext } from "react"
-import { examContext } from "../../../../../../../lib/context/examContext"
+import { supportContext } from "../../../../../../../lib/context/supportContext"
 
 export const SupportModal = () => {
-    const { setSupportModal } = useContext(examContext)
+    const { setSupportModal } = useContext(supportContext)
 
     return (
         <main className="absolute max-w-screen min-h-screen flex justify-center inset-0 fixed bg-black/50">

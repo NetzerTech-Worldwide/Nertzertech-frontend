@@ -8,7 +8,7 @@ import { QuickHelp } from "./_components/quickHelp"
 import { FAQs } from "../support/_components/faqs"
 import { SupportModal } from "../support/_components/supportModal"
 import { useContext } from "react"
-import { examContext } from "../../../../../../lib/context/examContext"
+import { supportContext } from "../../../../../../lib/context/supportContext"
 
 
 const lato = Lato({
@@ -17,7 +17,7 @@ const lato = Lato({
 })
 
 const SupportPage = () => {
-    const { supportModal, setSupportModal } = useContext(examContext)
+    const { supportModal, setSupportModal } = useContext(supportContext)
 
     return (
         <main className={`w-full ${lato.className}`}>
