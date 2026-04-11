@@ -1,17 +1,23 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
+import type { StaticImageData } from 'next/image';
 
 interface HeroSectionProps {
-  imageSrc: string;
+  imageSrc: StaticImageData | string;
   heading: string;
   description: string;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ imageSrc, heading, description }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({
+  imageSrc,
+  heading,
+  description,
+}) => {
   return (
     <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden h-screen">
+
+      {/* SVG pattern overlay (your version) */}
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -19,6 +25,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ imageSrc, heading, descriptio
         }}
       />
 
+      {/* Background image */}
       <Image
         src={imageSrc}
         alt="Hero Image"
@@ -27,12 +34,29 @@ const HeroSection: React.FC<HeroSectionProps> = ({ imageSrc, heading, descriptio
         priority
       />
 
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/40" />
 
+      {/* Logo (added from team version) */}
+      <div className="absolute top-6 left-6 z-20">
+        <Image
+          src="/_assets/logo.png"
+          alt="Logo"
+          width={140}
+          height={140}
+          className="object-contain"
+        />
+      </div>
+
+      {/* Content */}
       <div className="relative z-10 p-12 text-white h-full w-full flex flex-col justify-end">
         <div className="max-w-md mb-20">
-          <h1 className="text-2xl font-bold mb-4 leading-tight">{heading}</h1>
-          <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
+          <h1 className="text-2xl font-bold mb-4 leading-tight">
+            {heading}
+          </h1>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            {description}
+          </p>
         </div>
       </div>
     </div>

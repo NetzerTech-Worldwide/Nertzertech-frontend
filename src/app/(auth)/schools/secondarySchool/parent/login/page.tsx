@@ -3,11 +3,19 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { Eye, EyeOff, X } from "lucide-react";
 // import { useRouter } from 'next/navigation';
+<<<<<<<< HEAD:src/app/(auth)/schools/secondarySchool/parent/login/page.tsx
 import HeroSection from '../../../../../_components/authHeroSection';
 import { loginParent } from '../../../../../utils/authApi';
 import heroImage from '../../../../Assets/parentOne.png'
 import { useRouter } from 'next/navigation';
 import PinSetupModal from '../../../../../_components/pinSetupModal';
+========
+import HeroSection from '../../../../_components/authHeroSection';
+import { loginParent } from '../../../../utils/authApi';
+import heroImage from '../../../../Assets/parentOne.png'
+import { useRouter } from 'next/navigation';
+import PinSetupModal from '../../../../_components/pinSetupModal';
+>>>>>>>> origin/develop:src/app/schools/secondarySchool/parent/login/page.tsx
 
 
 const LoginInterface: React.FC = () => {

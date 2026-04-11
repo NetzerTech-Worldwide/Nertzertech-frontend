@@ -40,6 +40,7 @@ const LoginInterface: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+<<<<<<< HEAD:src/app/(auth)/schools/secondarySchool/teacher/login/page.tsx
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   if (!validateForm()) return;
@@ -57,6 +58,17 @@ const LoginInterface: React.FC = () => {
     setIsLoading(false);
   }
 };
+=======
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log('', formData);
+      setIsLoading(false);
+    }, 1500);
+  };
+>>>>>>> origin/develop:src/app/schools/university/studentLogin/page.tsx
 
   const handleForgotPassword = () => {
     router.push('/schools/secondarySchool/teacher/forgetPassword')
@@ -86,7 +98,11 @@ const LoginInterface: React.FC = () => {
             <div className="space-y-3">
               <div>
                 <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1.5">
+<<<<<<< HEAD:src/app/(auth)/schools/secondarySchool/teacher/login/page.tsx
                   Staff ID
+=======
+                  Student ID/ Matric No.
+>>>>>>> origin/develop:src/app/schools/university/studentLogin/page.tsx
                 </label>
                 <input
                   type="text"
@@ -170,6 +186,41 @@ const LoginInterface: React.FC = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD:src/app/(auth)/schools/secondarySchool/teacher/login/page.tsx
+=======
+
+      
+      {showPopup && (
+        <div className="fixed inset-0 bg-gray-600/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-fade-in">
+            <button
+              onClick={handleClosePopup}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
+            
+            <h3 className="text-lg font-semibold text-cyan-900 mb-2">
+              Important Notice
+            </h3>
+            <hr className='text-gray-500 mb-2'/>
+            <p className="text-sm mb-6 leading-relaxed">
+              Please use your matric number and 1234567 as the default password. 
+             <span className='font-bold'>Remember to change your password once you login to avoid compromise of your profile</span>
+            </p>
+            <div className="grid place-items-center">
+                <button
+                    onClick={handleClosePopup}
+                    className="bg-[#216388] w-fit hover:bg-cyan-700 text-white font-medium py-2.5 px-8 rounded-lg transition-colors"
+                >
+                    Cancel
+                </button>
+            </div>
+          </div>
+        </div>
+      )}
+>>>>>>> origin/develop:src/app/schools/university/studentLogin/page.tsx
     </div>
   );
 };
