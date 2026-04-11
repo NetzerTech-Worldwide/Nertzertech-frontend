@@ -4,28 +4,32 @@ import { BASE_URL } from "@/app/utils/config";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   const token = request.cookies.get("token")?.value;
-  if (!token) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  if (!token)
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-  // Reconstruct the path e.g. ["overview"] or ["calendar"]
-  const path = params.path.join("/");
+  const { path: pathSegments } = await params;
+  const path = pathSegments.join("/");
 
-  // Forward all query params as-is
   const { searchParams } = new URL(request.url);
 
-  const res = await fetch(
-    `${BASE_URL}/attendance/${path}?${searchParams}`,
-    {
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}/attendance/${path}?${searchParams}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
+    });
+  } catch {
+    return NextResponse.json(
+      { message: "Upstream service unavailable" },
+      { status: 502 }
+    );
+  }
 
   const data = await res.json();
-  if (!res.ok) return NextResponse.json(data, { status: res.status });
-  return NextResponse.json(data);
+  return NextResponse.json(data, { status: res.status });
 }
