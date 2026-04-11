@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Button } from "@/app/_components/cards/button"
 import { useContext, useState } from "react"
-import { examContext } from "../../../../../../../lib/context/examContext"
 import { useMutation } from "@tanstack/react-query"
 import { postSupportData } from "../../../../../../../lib/api.js/post"
+import { supportContext } from "../../../../../../../lib/context/supportContext"
 
 
 const schema = yup.object().shape({
@@ -19,7 +19,7 @@ const schema = yup.object().shape({
 export const SupportForm = () => {
     const [files, setFiles] = useState([])
     const { register, handleSubmit, formState: { errors } } = useForm({resolver: yupResolver(schema)})
-    const { setSupportModal } = useContext(examContext)
+    const { setSupportModal } = useContext(supportContext)
 
     // Awaiting support end point
     // const url = `${process.env.BASE_URL}support/submit`
