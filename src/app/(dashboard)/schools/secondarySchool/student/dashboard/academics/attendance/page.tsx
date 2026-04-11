@@ -12,11 +12,19 @@ import { AttendanceSubjects } from "../_components/advancesubjects";
 import { AttendanceHistory } from "../_components/attendancehistory";
 import { ArrowLeft, Download, Printer } from "lucide-react";
 import AcademicsNavigation from "../_components/academicsNavigation";
+import { useAttendanceOverview } from "@/hooks/useAttendance"; // ← added
 
 type Tab = "overview" | "calendar" | "subjects" | "history";
 
 const AttendancePage = () => {
   const [activeTab, setActiveTab] = useState<Tab>("overview");
+
+  // ── TEMPORARY TEST — remove once confirmed working ──
+  const { data, loading, error } = useAttendanceOverview();
+  if (!loading) {
+  console.log("🧪 attendance overview:", { data, error });
+}
+  
 
   return (
     <div className="flex flex-col min-h-full bg-gray-50 p-4 md:p-6 gap-4 md:gap-5 overflow-auto">
@@ -69,13 +77,10 @@ const AttendancePage = () => {
         <div className="p-3 md:p-4">
           {activeTab === "overview" && (
             <div className="flex flex-col gap-4">
-              {/* Row 1: Trend + Breakdown */}
               <div className="flex flex-col lg:flex-row gap-4">
                 <MonthlyAttendanceTrend />
                 <AttendanceBreakdown />
               </div>
-
-              {/* Row 2: Status + Achievements + Notifications */}
               <div className="flex flex-col md:flex-row gap-4">
                 <TodaysStatus />
                 <Achievements />

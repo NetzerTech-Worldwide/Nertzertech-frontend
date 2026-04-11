@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 
-const baseUrl = "https://dev-netzertech-backend.vercel.app/api/v1";
+import { BASE_URL } from "../../../utils/config";
 
 export async function POST(request: Request) {
   const body = await request.json();
 
-  const res = await fetch(`${baseUrl}/auth/login/student/secondary`, {
+  const res = await fetch(`${BASE_URL}/auth/login/student/secondary`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),

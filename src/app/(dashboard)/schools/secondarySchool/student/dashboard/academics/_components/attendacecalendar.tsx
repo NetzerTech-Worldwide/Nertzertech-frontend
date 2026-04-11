@@ -99,7 +99,7 @@ const SummaryCard = () => (
     </div>
 
     <div className="mt-4 pt-3 border-t border-gray-100">
-      <h4 className="text-xs font-semibold text-gray-600 mb-2">Today's Status</h4>
+      <h4 className="text-xs font-semibold text-gray-600 mb-2">Today&apos;s Status</h4>
       <div className="flex items-center gap-2">
         <span className="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0" />
         <span className="text-xs text-gray-600">Present</span>
