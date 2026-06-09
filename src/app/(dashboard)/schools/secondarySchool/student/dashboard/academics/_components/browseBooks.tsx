@@ -1,58 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import { Search, Heart, BookOpen, Star, X, ChevronDown, AlertCircle } from "lucide-react";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  cover: string;
-  rating: number;
-  reviews: number;
-  status: "Available" | "Borrowed" | "Reserved";
-  dueDate?: string;
-  lateFee?: number;
-  lateFeePaid?: string;
-  color: string;
-  wishlist?: boolean;
-}
+import { Search, BookOpen, X, AlertCircle } from "lucide-react";
+import { Book, BookCard, StarRating } from "./BookCard";
 
 const MOCK_BOOKS: Book[] = [
-  { id: 1,  title: "To Kill a Mockingbird", author: "Harper Lee",        genre: "Fiction",          cover: "📖", color: "#8B5E3C", rating: 4.8, reviews: 142, status: "Available" },
-  { id: 2,  title: "1984",                  author: "George Orwell",     genre: "Dystopian",        cover: "📕", color: "#2C3E50", rating: 4.7, reviews: 198, status: "Borrowed"  },
-  { id: 3,  title: "The Great Gatsby",      author: "F. Scott Fitzgerald",genre: "Classic",         cover: "📗", color: "#1A5276", rating: 4.5, reviews: 87,  status: "Available" },
-  { id: 4,  title: "Introduction to Algorithms", author: "Raymond G. Terry", genre: "Computer Studies", cover: "💻", color: "#1F618D", rating: 4.6, reviews: 56, status: "Available" },
-  { id: 5,  title: "A Brief History of Time",    author: "Stephen Hawking",   genre: "Science",     cover: "🌌", color: "#1B2631", rating: 4.9, reviews: 203, status: "Available" },
-  { id: 6,  title: "General Mathematics",        author: "R. North Smith",    genre: "Mathematics", cover: "📐", color: "#7D3C98", rating: 4.2, reviews: 34,  status: "Reserved"  },
-  { id: 7,  title: "English Grammar",            author: "Oxford Press",      genre: "Language",    cover: "🇬🇧", color: "#1A5276", rating: 4.4, reviews: 61,  status: "Available" },
-  { id: 8,  title: "Computer, Commuter & Science", author: "James K. Bright", genre: "Computer Studies", cover: "🖥️", color: "#212F3C", rating: 4.3, reviews: 45, status: "Available" },
-  { id: 9,  title: "Cyan Wowk",             author: "Sandra Grant",      genre: "Fiction",          cover: "🎨", color: "#148F77", rating: 4.1, reviews: 29,  status: "Borrowed"  },
+  { id: 1,  title: "To Kill a Mockingbird", author: "Harper Lee",         genre: "Fiction",          cover: "📖", color: "#8B5E3C", rating: 4.8, reviews: 142, status: "Available", pages: 281, isbn: "978-0-06-112008-4" },
+  { id: 2,  title: "1984",                  author: "George Orwell",      genre: "Dystopian",        cover: "📕", color: "#2C3E50", rating: 4.7, reviews: 198, status: "Borrowed",  pages: 328, isbn: "978-0-45-228423-4" },
+  { id: 3,  title: "The Great Gatsby",      author: "F. Scott Fitzgerald",genre: "Classic",          cover: "📗", color: "#1A5276", rating: 4.5, reviews: 87,  status: "Available", pages: 180, isbn: "978-0-74-327356-5" },
+  { id: 4,  title: "Introduction to Algorithms", author: "Raymond G. Terry", genre: "Computer Studies", cover: "💻", color: "#1F618D", rating: 4.6, reviews: 56, status: "Available", pages: 1312, isbn: "978-0-262-03384-8" },
+  { id: 5,  title: "A Brief History of Time",    author: "Stephen Hawking",   genre: "Science",         cover: "🌌", color: "#1B2631", rating: 4.9, reviews: 203, status: "Available", pages: 256, isbn: "978-0-553-10953-5" },
+  { id: 6,  title: "General Mathematics",        author: "R. North Smith",    genre: "Mathematics",     cover: "📐", color: "#7D3C98", rating: 4.2, reviews: 34,  status: "Reserved", pages: 420, isbn: "978-1-234-56789-7" },
+  { id: 7,  title: "English Grammar",            author: "Oxford Press",      genre: "Language",        cover: "🇬🇧", color: "#1A5276", rating: 4.4, reviews: 61,  status: "Available", pages: 220, isbn: "978-0-19-861380-6" },
+  { id: 8,  title: "Computer, Commuter & Science", author: "James K. Bright", genre: "Computer Studies", cover: "🖥️", color: "#212F3C", rating: 4.3, reviews: 45, status: "Available", pages: 389, isbn: "978-1-4028-9462-6" },
+  { id: 9,  title: "Cyan Wowk",             author: "Sandra Grant",       genre: "Fiction",          cover: "🎨", color: "#148F77", rating: 4.1, reviews: 29,  status: "Borrowed",  pages: 240, isbn: "978-0-00-000000-2" },
 ];
 
 const GENRES = ["All", "Fiction", "Dystopian", "Classic", "Computer Studies", "Science", "Mathematics", "Language"];
-
-const StarRating = ({ rating }: { rating: number }) => (
-  <div className="flex items-center gap-0.5">
-    {[1,2,3,4,5].map((s) => (
-      <Star key={s} className={`w-3 h-3 ${s <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "text-gray-200"}`} />
-    ))}
-    <span className="text-[10px] text-gray-400 ml-1">{rating}</span>
-  </div>
-);
-
-const StatusBadge = ({ status }: { status: Book["status"] }) => {
-  const map = {
-    Available: "bg-green-100 text-green-700",
-    Borrowed:  "bg-orange-100 text-orange-700",
-    Reserved:  "bg-blue-100 text-blue-700",
-  };
-  return (
-    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${map[status]}`}>
-      {status}
-    </span>
-  );
-};
 
 const BookModal = ({ book, onClose, onBorrow }: { book: Book; onClose: () => void; onBorrow: (id: number) => void }) => (
   <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -60,7 +23,7 @@ const BookModal = ({ book, onClose, onBorrow }: { book: Book; onClose: () => voi
       <div className="p-5">
         <div className="flex gap-4 mb-4">
           {/* Cover */}
-          <div className="w-20 h-28 rounded-lg flex items-center justify-center text-3xl flex-shrink-0"
+          <div className="w-20 h-28 rounded-lg flex items-center justify-center text-3xl shrink-0"
             style={{ backgroundColor: book.color }}>
             {book.cover}
           </div>
@@ -100,7 +63,7 @@ const BookModal = ({ book, onClose, onBorrow }: { book: Book; onClose: () => voi
 
         {book.lateFee !== undefined && (
           <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-xs text-amber-700">
-            <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <p>You have a ₦{book.lateFee} late fee. Pay before borrowing this book again. Fee status: {book.lateFeePaid}</p>
           </div>
         )}
@@ -154,104 +117,51 @@ export const BrowseBooks = () => {
       {/* Success notification */}
       {successMsg && (
         <div className="flex items-start gap-2 bg-green-50 border border-green-200 rounded-lg p-3 text-xs text-green-700">
-          <BookOpen className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <BookOpen className="w-4 h-4 shrink-0 mt-0.5" />
           <p>{successMsg}</p>
         </div>
       )}
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search books or authors..."
-            className="w-full pl-8 pr-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#216388]"
+            className="w-full pl-11 pr-3 py-2.5 text-sm border border-slate-200 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white"
           />
         </div>
 
-        {/* Genre filter */}
-        <div className="relative">
-          <select
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-            className="appearance-none pl-3 pr-7 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#216388] bg-white text-gray-600"
-          >
-            {GENRES.map((g) => <option key={g}>{g}</option>)}
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400 pointer-events-none" />
-        </div>
-
-        <div className="relative">
-          <select className="appearance-none pl-3 pr-7 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#216388] bg-white text-gray-600">
-            <option>All</option>
-            <option>Available</option>
-            <option>Borrowed</option>
-            <option>Reserved</option>
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400 pointer-events-none" />
-        </div>
-
-        <div className="relative">
-          <select className="appearance-none pl-3 pr-7 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#216388] bg-white text-gray-600">
-            <option>Sort: Title</option>
-            <option>Sort: Rating</option>
-            <option>Sort: Author</option>
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400 pointer-events-none" />
+        <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-xs">
+            <span>All categories</span>
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-xs">
+            <span>All</span>
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-xs">
+            <span>Sort: Title</span>
+          </div>
         </div>
       </div>
 
-      {/* Book Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+      {/* Book Grid: 3 columns on desktop and larger */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {filtered.map((book) => {
-          const isBorrowed  = borrowed.includes(book.id)  || book.status === "Borrowed";
+          const isBorrowed = borrowed.includes(book.id) || book.status === "Borrowed";
           const isWishlisted = wishlist.includes(book.id);
 
           return (
-            <div key={book.id} className="flex flex-col gap-2 group">
-              {/* Cover */}
-              <div
-                className="relative rounded-lg overflow-hidden cursor-pointer aspect-[2/3] flex items-center justify-center text-4xl transition-transform group-hover:scale-105"
-                style={{ backgroundColor: book.color }}
-                onClick={() => setSelectedBook(book)}
-              >
-                <span>{book.cover}</span>
-
-                {/* Overlays */}
-                {isBorrowed && (
-                  <span className="absolute top-1.5 right-1.5 bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded font-medium">
-                    On Due
-                  </span>
-                )}
-
-                {/* Wishlist heart */}
-                <button
-                  onClick={(e) => { e.stopPropagation(); toggleWishlist(book.id); }}
-                  className="absolute bottom-1.5 right-1.5 p-1 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
-                >
-                  <Heart className={`w-3 h-3 ${isWishlisted ? "fill-red-400 text-red-400" : "text-white"}`} />
-                </button>
-              </div>
-
-              {/* Info */}
-              <div>
-                <p className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2">{book.title}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5 truncate">By {book.author}</p>
-                <StarRating rating={book.rating} />
-                <div className="flex items-center justify-between mt-1.5 gap-1">
-                  <StatusBadge status={isBorrowed ? "Borrowed" : book.status} />
-                </div>
-                <button
-                  onClick={() => setSelectedBook(book)}
-                  disabled={isBorrowed}
-                  className="mt-2 w-full py-1.5 text-[10px] font-medium bg-[#216388] text-white rounded-md hover:bg-[#1a5070] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  {isBorrowed ? "Borrowed" : "Borrow"}
-                </button>
-              </div>
-            </div>
+            <BookCard
+              key={book.id}
+              book={book}
+              isBorrowed={isBorrowed}
+              isWishlisted={isWishlisted}
+              onSelect={setSelectedBook}
+              onToggleWishlist={toggleWishlist}
+            />
           );
         })}
       </div>

@@ -10,8 +10,9 @@ import { Notifications } from "../_components/notifications";
 import { AttendanceCalendar } from "../_components/attendacecalendar";
 import { AttendanceSubjects } from "../_components/advancesubjects";
 import { AttendanceHistory } from "../_components/attendancehistory";
-import { ArrowLeft, Download, Printer } from "lucide-react";
+import { Download, Printer } from "lucide-react";
 import AcademicsNavigation from "../_components/academicsNavigation";
+import AcademicsPageHeader from "../_components/academicsPageHeader";
 import { useAttendanceOverview } from "@/hooks/useAttendance"; // ← added
 
 type Tab = "overview" | "calendar" | "subjects" | "history";
@@ -27,40 +28,28 @@ const AttendancePage = () => {
   
 
   return (
-    <div className="flex flex-col min-h-full bg-gray-50 p-4 md:p-6 gap-4 md:gap-5 overflow-auto">
+    <div className="flex flex-col min-h-full bg-gray-50 px-4 pt-0 pb-4 md:px-6 md:pt-0 md:pb-6 gap-4 md:gap-5 overflow-auto">
       
-      {/* Header */}
-      <div className="flex flex-col gap-3">
-        
-        {/* Row 1: Back button */}
-        <div>
-          <button className="flex items-center gap-1 text-sm bg-[#216388] px-3 py-2 rounded text-white w-fit">
-            <ArrowLeft className="w-4 h-4" />
-            Back
-          </button>
-        </div>
+      <div className="space-y-4">
+        <AcademicsPageHeader
+          title="Attendance"
+          subtitle="Monitor your attendance record and statistics"
+          showBack
+          actions={
+            <>
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors bg-white">
+                <Printer className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Print View</span>
+              </button>
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[#216388] text-white rounded-lg hover:bg-[#1a5070] transition-colors">
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Export Report</span>
+              </button>
+            </>
+          }
+        />
 
-        {/* Row 2: Navigation pills */}
         <AcademicsNavigation />
-
-        {/* Row 3: Title + Buttons */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg md:text-xl font-bold text-gray-800">Attendance</h1>
-            <p className="text-xs text-gray-400">Monitor your attendance record and statistics</p>
-          </div>
-          <div className="flex gap-2 flex-shrink-0">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors bg-white">
-              <Printer className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Print View</span>
-            </button>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[#216388] text-white rounded-lg hover:bg-[#1a5070] transition-colors">
-              <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Export Report</span>
-            </button>
-          </div>
-        </div>
-
       </div>
 
       {/* Stats Strip — 2 cols on mobile, 4 on desktop */}

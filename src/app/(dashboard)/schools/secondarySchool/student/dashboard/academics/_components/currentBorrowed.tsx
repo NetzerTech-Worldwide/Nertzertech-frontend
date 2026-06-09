@@ -1,7 +1,20 @@
 "use client";
 import { BookOpen, Clock, Shield, RefreshCw } from "lucide-react";
 
-const BORROWED: any[] = [];
+const BORROWED: any[] = [
+  {
+    id: 1,
+    title: "Introduction to Algorithms",
+    author: "Raymond A. Samuel",
+    cover: "💻",
+    color: "#1F618D",
+    borrowDate: "Feb 10, 2026",
+    dueDate: "March 1, 2026",
+    daysLeft: 5,
+    lateFee: 0,
+    status: "On due",
+  },
+];
 
 const FEATURE_CARDS = [
   {

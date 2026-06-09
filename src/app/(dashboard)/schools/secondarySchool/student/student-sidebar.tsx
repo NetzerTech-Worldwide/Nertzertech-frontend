@@ -10,7 +10,7 @@ import {
   Trophy, Headphones, CheckSquare, User, Menu, ChevronRight, LogOut, X
 } from "lucide-react";
 
-const BASE = "/school/secondarySchool/student/dashboard";
+const BASE = "/schools/secondarySchool/student/dashboard";
 
 type Item = { label: string; href: string; icon: LucideIcon; hasArrow?: boolean };
 

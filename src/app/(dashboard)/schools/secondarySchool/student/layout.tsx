@@ -4,7 +4,7 @@ import StudentTopbar from "./student-topbar";
 
 export default function StudentLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-screen bg-[#F5F7FB] md:pl-64 lg:pl-72">
+    <div className="relative min-h-screen bg-[#F5F7FB] md:pl-56 lg:pl-64">
       <StudentSidebar />
       <StudentSidebarToggle />
 

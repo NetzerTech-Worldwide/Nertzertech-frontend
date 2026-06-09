@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Search, BookOpen, ChevronRight, X, Check } from "lucide-react";
+import { BookOpen, ChevronRight, X, Check } from "lucide-react";
 import AcademicsNavigation from "./_components/academicsNavigation";
+import AcademicsPageHeader from "./_components/academicsPageHeader";
 
 type CatalogItem = {
   id: string;
@@ -269,28 +270,15 @@ export default function AcademicsPage() {
 
   return (
     <>
-      <div className="space-y-6 px-4 py-6 sm:px-5 md:px-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-xl md:text-2xl font-semibold text-slate-900">Subjects</h1>
-            <p className="text-sm text-slate-500">Access your learning materials and track progress</p>
-          </div>
+      <div className="space-y-6 px-4 pt-0 pb-6 sm:px-5 md:px-6">
+        <AcademicsPageHeader
+          title="Subjects"
+          subtitle="Access your learning materials and track progress"
+          searchValue={query}
+          onSearchChange={setQuery}
+        />
 
-          <div className="w-full md:w-[360px]">
-            <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-2.5">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                type="text"
-                placeholder="Search anything here"
-                className="flex-1 bg-transparent text-sm text-slate-600 placeholder:text-slate-400 outline-none"
-              />
-              <Search className="h-5 w-5 text-slate-500" />
-            </div>
-          </div>
-        </div>
-
-        <AcademicsNavigation/>
+        <AcademicsNavigation />
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           <StatCard label="Enrolled Subjects" value="10" iconSrc="/_assets/Vector3.png" iconAlt="Enrolled subjects" />

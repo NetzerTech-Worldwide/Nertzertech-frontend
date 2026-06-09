@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const SUBJECTS_BASE = "/school/secondarySchool/student/dashboard/academics";
+export const ACADEMICS_BASE = "/schools/secondarySchool/student/dashboard/academics";
 
 const TOP_FILTERS = [
-  { label: "Subject", href: SUBJECTS_BASE },
-  { label: "Classroom", href: `${SUBJECTS_BASE}/classroom` },
-  { label: "Assignment", href: `${SUBJECTS_BASE}/assignment` },
-  { label: "Examinations", href: `${SUBJECTS_BASE}/examinations` },
-  { label: "Records", href: `${SUBJECTS_BASE}/records` },
-  { label: "Attendance", href: `${SUBJECTS_BASE}/attendance` },
-  { label: "Timetable", href: `${SUBJECTS_BASE}/timetable` },
-  { label: "Library", href: `${SUBJECTS_BASE}/library` },
+  { label: "Subject", href: ACADEMICS_BASE },
+  { label: "Classroom", href: `${ACADEMICS_BASE}/classroom` },
+  { label: "Assignment", href: `${ACADEMICS_BASE}/assignment` },
+  { label: "Examinations", href: `${ACADEMICS_BASE}/examinations` },
+  { label: "Records", href: `${ACADEMICS_BASE}/records` },
+  { label: "Attendance", href: `${ACADEMICS_BASE}/attendance` },
+  { label: "Timetable", href: `${ACADEMICS_BASE}/timetable` },
+  { label: "Library", href: `${ACADEMICS_BASE}/library` },
 ];
 
 function FilterPill({ href, label }: { href: string; label: string }) {
@@ -21,7 +21,7 @@ function FilterPill({ href, label }: { href: string; label: string }) {
 
   const active =
     pathname === href ||
-    (href !== SUBJECTS_BASE && pathname.startsWith(href));
+    (href !== ACADEMICS_BASE && pathname.startsWith(href));
 
   return (
     <Link

@@ -2,10 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Search } from "lucide-react";
-
-const SUBJECTS_BASE = "/schools/secondarySchool/student/academics";
+import AcademicsNavigation, { ACADEMICS_BASE } from "../_components/academicsNavigation";
+import AcademicsPageHeader from "../_components/academicsPageHeader";
 
 type AssignmentStatus = "submitted" | "pending";
 type PriorityLevel = "LOW" | "MEDIUM" | "HIGH";
@@ -35,7 +33,7 @@ const ASSIGNMENTS: Assignment[] = [
     priority: "LOW",
     points: "100/89",
     status: "submitted",
-    submissionHref: `${SUBJECTS_BASE}/assignment/eng-essay`,
+    submissionHref: `${ACADEMICS_BASE}/assignment/eng-essay`,
   },
   {
     id: "bio-digestive",
@@ -69,25 +67,9 @@ const ASSIGNMENTS: Assignment[] = [
     priority: "HIGH",
     points: "120",
     status: "pending",
-    startHref: `${SUBJECTS_BASE}/assignment/geo-rainfall`,
+    startHref: `${ACADEMICS_BASE}/assignment/geo-rainfall`,
   },
 ];
-
-function FilterPill({ href, label }: { href: string; label: string }) {
-  const pathname = usePathname();
-  const isActive = pathname === href || (href !== SUBJECTS_BASE && pathname?.startsWith(href));
-
-  return (
-    <Link
-      href={href}
-      aria-current={isActive ? "page" : undefined}
-      className={`rounded-full border px-3 py-1.5 text-xs leading-none transition
-        ${isActive ? "bg-[#2A7EAF] text-white border-[#2A7EAF]" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"}`}
-    >
-      {label}
-    </Link>
-  );
-}
 
 function StatusBadge({ status }: { status: AssignmentStatus }) {
   const isSubmitted = status === "submitted";
@@ -207,37 +189,15 @@ export default function AssignmentPage() {
   }, [query, tab]);
 
   return (
-    <div className="px-4 py-6 sm:px-5 md:px-6 space-y-5">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-900">Assignments</h1>
-          <p className="text-sm text-slate-500">Manage your home and project submissions</p>
-        </div>
+    <div className="px-4 pt-0 pb-6 sm:px-5 md:px-6 space-y-5">
+      <AcademicsPageHeader
+        title="Assignments"
+        subtitle="Manage your home and project submissions"
+        searchValue={query}
+        onSearchChange={setQuery}
+      />
 
-        <div className="w-full md:max-w-md">
-          <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-2.5">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              type="text"
-              placeholder="Search anything here"
-              className="flex-1 bg-transparent text-sm text-slate-600 placeholder:text-slate-400 outline-none"
-            />
-            <Search className="h-5 w-5 text-slate-500" />
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <FilterPill href={SUBJECTS_BASE} label="Subject" />
-        <FilterPill href={`${SUBJECTS_BASE}/classroom`} label="Classroom" />
-        <FilterPill href={`${SUBJECTS_BASE}/assignment`} label="Assignment" />
-        <FilterPill href={`${SUBJECTS_BASE}/examinations`} label="Examinations" />
-        <FilterPill href={`${SUBJECTS_BASE}/records`} label="Records" />
-        <FilterPill href={`${SUBJECTS_BASE}/attendance`} label="Attendance" />
-        <FilterPill href={`${SUBJECTS_BASE}/timetable`} label="Timetable" />
-        <FilterPill href={`${SUBJECTS_BASE}/library`} label="Library" />
-      </div>
+      <AcademicsNavigation />
 
       <section className="rounded-2xl border border-slate-200 bg-white">
         <div className="flex items-center gap-6 border-b border-slate-100 px-4 pt-4 sm:px-5">
