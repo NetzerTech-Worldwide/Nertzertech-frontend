@@ -1,3 +1,12 @@
-export default function Page() {
-  return <main className="p-6"><h1 className="text-2xl font-semibold">Approval</h1></main>;
+// app/approval/page.tsx
+import { leaveRequests } from "./approval-data";
+import ApprovalClient from "./_components/approval-client";
+
+
+export default function ApprovalPage() {
+  return (
+    <div className="flex-1 min-h-screen bg-gray-50 px-6 py-6">
+      <ApprovalClient requests={leaveRequests} />
+    </div>
+  );
 }
