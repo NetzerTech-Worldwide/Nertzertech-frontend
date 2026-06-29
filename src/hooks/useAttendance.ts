@@ -10,6 +10,7 @@ import {
 } from "@/app/utils/attendanceApi";
 import type {
   AttendanceOverview,
+  AttendanceSubjectsSummary,
   CalendarData,
   AttendanceHistoryResponse,
 } from "@/types/attendance";
@@ -54,7 +55,7 @@ export function useAttendanceCalendar(month: number, year: number) {
 }
 
 export function useAttendanceSubjects() {
-  const [data, setData] = useState<unknown | null>(null);
+  const [data, setData] = useState<AttendanceSubjectsSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

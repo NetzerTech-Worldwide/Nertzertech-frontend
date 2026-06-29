@@ -2,26 +2,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BASE_URL } from "@/app/utils/config";
 
-export async function GET(
+type AttendanceRouteContext = {
+  params: Promise<{ path: string[] }>;
+};
+
+async function proxyAttendanceRequest(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: AttendanceRouteContext
 ) {
   const token = request.cookies.get("token")?.value;
-  if (!token)
+
+  if (!token) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   const { path: pathSegments } = await params;
-  const path = pathSegments.join("/");
+  const path = pathSegments.map((segment) => encodeURIComponent(segment)).join("/");
+  const { search } = new URL(request.url);
 
-  const { searchParams } = new URL(request.url);
+  let body: BodyInit | undefined;
+  if (!["GET", "HEAD"].includes(request.method)) {
+    body = await request.text();
+  }
 
   let res: Response;
   try {
-    res = await fetch(`${BASE_URL}/attendance/${path}?${searchParams}`, {
+    res = await fetch(`${BASE_URL}/attendance/${path}${search}`, {
+      method: request.method,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": request.headers.get("content-type") ?? "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body,
+      cache: "no-store",
     });
   } catch {
     return NextResponse.json(
@@ -30,6 +43,22 @@ export async function GET(
     );
   }
 
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
   return NextResponse.json(data, { status: res.status });
+}
+
+export async function GET(request: NextRequest, context: AttendanceRouteContext) {
+  return proxyAttendanceRequest(request, context);
+}
+
+export async function POST(request: NextRequest, context: AttendanceRouteContext) {
+  return proxyAttendanceRequest(request, context);
+}
+
+export async function PATCH(request: NextRequest, context: AttendanceRouteContext) {
+  return proxyAttendanceRequest(request, context);
+}
+
+export async function DELETE(request: NextRequest, context: AttendanceRouteContext) {
+  return proxyAttendanceRequest(request, context);
 }

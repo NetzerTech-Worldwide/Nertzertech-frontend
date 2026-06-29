@@ -1,5 +1,10 @@
 // src/utils/attendanceApi.ts
-import { AttendanceOverview, CalendarData, AttendanceHistoryResponse } from "@/types/attendance";
+import {
+  AttendanceOverview,
+  AttendanceSubjectsSummary,
+  CalendarData,
+  AttendanceHistoryResponse,
+} from "@/types/attendance";
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -13,11 +18,14 @@ export async function fetchAttendanceOverview(params?: {
   startDate?: string;
   endDate?: string;
 }): Promise<AttendanceOverview> {
-  const query = new URLSearchParams();
-  if (params?.startDate) query.set("startDate", params.startDate);
-  if (params?.endDate) query.set("endDate", params.endDate);
-
-  const res = await fetch(`/api/attendance/overview?${query}`);
+  const res = await fetch(`/api/attendance/overview`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      startDate: params?.startDate,
+      endDate: params?.endDate,
+    }),
+  });
   return handleResponse<AttendanceOverview>(res);
 }
 
@@ -34,9 +42,9 @@ export async function fetchAttendanceCalendar(params: {
   return handleResponse<CalendarData>(res);
 }
 
-export async function fetchAttendanceSubjects(): Promise<unknown> {
+export async function fetchAttendanceSubjects(): Promise<AttendanceSubjectsSummary> {
   const res = await fetch(`/api/attendance/subjects`);
-  return handleResponse<unknown>(res);
+  return handleResponse<AttendanceSubjectsSummary>(res);
 }
 
 export async function fetchAttendanceHistory(params?: {

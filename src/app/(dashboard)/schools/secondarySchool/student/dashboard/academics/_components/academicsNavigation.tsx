@@ -27,7 +27,7 @@ function FilterPill({ href, label }: { href: string; label: string }) {
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`rounded-full border px-3 py-1.5 text-xs leading-none transition
+      className={`rounded-full border px-4 py-2 text-xs leading-none transition text-[17px]
         ${
           active
             ? "bg-[#2A7EAF] text-white border-[#2A7EAF]"

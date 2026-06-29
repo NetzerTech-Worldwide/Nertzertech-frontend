@@ -44,6 +44,13 @@ export interface AttendanceHistoryResponse {
   total: number;
 }
 
+export interface AttendanceSubjectsSummary {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+}
+
 export interface AttendanceBreakdownItem {
   name: string;
   value: number;

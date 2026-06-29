@@ -1,259 +1,92 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { BookOpen, ChevronRight, X, Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import AcademicsNavigation from "./_components/academicsNavigation";
 import AcademicsPageHeader from "./_components/academicsPageHeader";
+import { StatCard, SubjectCard, type SimpleSubject } from "./_components/subjectCards";
+import {
+  BookOpen,
+  GraduationCap,
+} from "lucide-react";
+import { SubjectPickerModal, SuccessModal, type CatalogItem } from "./_components/subjectModals";
+import { SelectedSubjectsTable } from "./_components/selectedSubjectsTable";
+import { SubjectRoadmap } from "./_components/Subjectroadmap";
+import {
+  fetchAcademicRoadmap,
+  fetchAcademicSubjects,
+} from "../../../endpoints/academics";
+import type { AcademicRoadmapDetail } from "@/types/academic";
 
-type CatalogItem = {
-  id: string;
-  name: string;
-  teacher: string;
-  type: "Compulsory" | "Elective";
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const STUDENT = {
+  name:  "Samuel Smith",
+  id:    "STU0034",
+  klass: "SS 2",
 };
 
-const SUBJECT_CATALOG: CatalogItem[] = [
-  { id: "eng", name: "English Language", teacher: "Mr. John Adeyemi", type: "Compulsory" },
-  { id: "math", name: "Mathematics", teacher: "Mrs. Grace Okafor", type: "Compulsory" },
-  { id: "bio", name: "Biology", teacher: "Mr. Peter Musa", type: "Compulsory" },
-  { id: "chem", name: "Chemistry", teacher: "Mrs. Esther Ibrahim", type: "Compulsory" },
-  { id: "phy", name: "Physic", teacher: "Mr. Samuel Ogunleye", type: "Compulsory" },
-  { id: "cs", name: "Computer Studies", teacher: "Mrs. Mary Nwosu", type: "Compulsory" },
-  { id: "geo", name: "Geography", teacher: "Mr. James Bello", type: "Compulsory" },
-  { id: "agri", name: "Agricultural Science", teacher: "Mrs. Joy Eze", type: "Elective" },
-  { id: "td", name: "Technical Drawing", teacher: "Mr. David Abubakar", type: "Elective" },
-  { id: "yor", name: "Yoruba Language", teacher: "Mrs. Victoria Uche", type: "Compulsory" },
-  { id: "pl", name: "Programming Language", teacher: "Mrs. Elizabeth Okeke", type: "Compulsory" },
-];
+type Tab = "subjects" | "registration" | "selected";
 
-function StatCard({ label, value, iconSrc, iconAlt = "" }: { label: string; value: string | number; iconSrc: string; iconAlt?: string }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white px-6 py-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">{label}</p>
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-50">
-          <Image src={iconSrc} alt={iconAlt} width={20} height={20} />
-        </span>
-      </div>
-      <p className="mt-3 text-2xl font-semibold text-slate-900">{value}</p>
-    </div>
-  );
+function toSubjectId(name: string, index: number) {
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug || `subject-${index}`;
 }
 
-
-type SimpleSubject = {
-  id: string;
-  name: string;
-  teacher: string;
-  registered: boolean;
-  img?: string;
-};
-
-function SubjectCard({ s }: { s: SimpleSubject }) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-      <div className="h-40 w-full overflow-hidden bg-slate-100">
-        {s.img ? (
-          <Image src={s.img} alt={s.name} width={640} height={320} className="h-full w-full object-cover" />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <BookOpen className="h-10 w-10 text-slate-400" />
-          </div>
-        )}
-      </div>
-      <div className="p-4">
-        <div className="flex items-start gap-2">
-          <div className="flex-1">
-            <p className="text-[13px] font-semibold text-slate-900">{s.name}</p>
-            <p className="mt-1 text-[11px] text-slate-500">{s.teacher}</p>
-          </div>
-          <span
-            className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium ${
-              s.registered ? "border border-sky-100 bg-sky-50 text-sky-700" : "border border-amber-200 bg-amber-50 text-amber-600"
-            }`}
-          >
-            {s.registered ? "Registered" : "Not Registered"}
-          </span>
-        </div>
-        <button className="mt-3 inline-flex items-center gap-1 rounded-md bg-sky-800 px-3 py-2 text-[12px] font-medium text-white hover:bg-sky-900">
-          Learning Roadmap <ChevronRight className="h-3.5 w-3.5" />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function SubjectPickerModal({
-  open,
-  onClose,
-  initial,
-  onSave,
-  student,
-}: {
-  open: boolean;
-  onClose: () => void;
-  initial: string[];
-  onSave: (ids: string[]) => void;
-  student: { name: string; id: string; term: string; klass: string };
-}) {
-  const [picked, setPicked] = useState<string[]>(initial);
-
-  useEffect(() => setPicked(initial), [initial, open]);
-
-  const toggle = (id: string) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-
-  const [left, right] = useMemo(() => {
-    const mid = Math.ceil(SUBJECT_CATALOG.length / 2);
-    return [SUBJECT_CATALOG.slice(0, mid), SUBJECT_CATALOG.slice(mid)];
-  }, []);
-
-  if (!open) return null;
-
-  return (
-    <div className="fixed inset-0 z-60">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="absolute inset-0 grid place-items-center p-4 sm:p-6">
-        <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-5 shadow-xl">
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <p className="text-[12px] text-slate-500">Choose your subjects</p>
-              <h3 className="text-lg font-semibold text-slate-900">{student.name}</h3>
-            </div>
-            <button onClick={onClose} className="rounded-full p-1.5 text-slate-500 hover:bg-slate-100" aria-label="Close">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          <div className="mb-4 rounded-xl bg-slate-50 p-3 text-[12px]">
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div>
-                <span className="font-semibold">Student ID:</span> <span>{student.id}</span>
-              </div>
-              <div>
-                <span className="font-semibold">Term:</span> <span>{student.term || "First Term"}</span>
-              </div>
-              <div>
-                <span className="font-semibold">Class:</span> <span>{student.klass}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            {[left, right].map((col, idx) => (
-              <div key={idx} className="space-y-3">
-                {col.map((s) => {
-                  const checked = picked.includes(s.id);
-                  return (
-                    <label key={s.id} className="flex cursor-pointer items-start gap-2">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggle(s.id)}
-                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
-                      />
-                      <span className="text-sm text-slate-700">{s.name}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 flex items-center justify-end gap-3">
-            <button onClick={onClose} className="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-              Cancel
-            </button>
-            <button onClick={() => onSave(picked)} className="inline-flex items-center gap-1 rounded-md bg-[#2A7EAF] px-5 py-2 text-sm font-medium text-white hover:bg-[#236a90]">
-              <Check className="h-4 w-4" />
-              Register
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SelectedSubjectsTable({ ids, student }: { ids: string[]; student: { name: string; id: string; term: string; klass: string } }) {
-  const rows = useMemo(
-    () =>
-      SUBJECT_CATALOG.filter((c) => ids.includes(c.id)).map((c) => ({
-        subject: c.name,
-        teacher: c.teacher,
-        type: c.type,
-      })),
-    [ids]
-  );
-
-  if (!rows.length) {
-    return (
-      <div className="rounded-lg border border-slate-200 p-6 text-sm text-slate-500">
-        You have not selected any subjects yet.
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <p className="text-[13px] font-semibold tracking-wide text-slate-900">SAMUEL SMITH DETAILS</p>
-        <div className="mt-2 grid gap-6 text-[12px] text-slate-700 sm:grid-cols-3">
-          <div>
-            <span className="font-medium">Student ID:</span> <span>{student.id}</span>
-          </div>
-          <div>
-            <span className="font-medium">Term:</span> <span>{student.term}</span>
-          </div>
-          <div>
-            <span className="font-medium">Class:</span> <span>{student.klass}</span>
-          </div>
-        </div>
-        <p className="mt-2 text-[12px] font-medium text-slate-700">Total Subject: {rows.length}</p>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-[520px] w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-slate-200 bg-slate-50 text-slate-600">
-              <th className="px-3 py-2 font-medium">Subject</th>
-              <th className="px-3 py-2 font-medium">Teachers</th>
-              <th className="px-3 py-2 font-medium">Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.subject} className="border-b border-slate-100">
-                <td className="px-3 py-2">{r.subject}</td>
-                <td className="px-3 py-2">{r.teacher}</td>
-                <td className="px-3 py-2">{r.type}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-const SIMPLE_SUBJECTS: SimpleSubject[] = SUBJECT_CATALOG.slice(0, 9).map((c, i) => ({
-  id: c.id,
-  name: c.name,
-  teacher: c.teacher,
-  registered: i % 3 === 1,
-  img: "/_assets/books.png",
-}));
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AcademicsPage() {
-  const [tab, setTab] = useState<"subjects" | "registration" | "selected">("subjects");
+  // UI state
+  const [tab, setTab]     = useState<Tab>("subjects");
   const [query, setQuery] = useState("");
 
+  const [activeRoadmapSubject, setActiveRoadmapSubject] = useState("");
+  const [activeRoadmap, setActiveRoadmap] = useState<AcademicRoadmapDetail | null>(null);
+  const [roadmapLoading, setRoadmapLoading] = useState(false);
+  const [roadmapError, setRoadmapError] = useState("");
+
+  async function handleOpenRoadmap(subjectId: string) {
+    const subject = subjects.find((item) => item.id === subjectId);
+    const subjectName = subject?.name ?? "";
+
+    setActiveRoadmapSubject(subjectName);
+    setActiveRoadmap(null);
+    setRoadmapError("");
+    setRoadmapLoading(true);
+    setTab("subjects");
+
+    try {
+      const roadmap = await fetchAcademicRoadmap(subjectName);
+      setActiveRoadmap(roadmap);
+    } catch (err) {
+      setRoadmapError(err instanceof Error ? err.message : "Unable to load roadmap");
+    } finally {
+      setRoadmapLoading(false);
+    }
+  }
+
+  function handleCloseRoadmap() {
+    setActiveRoadmapSubject("");
+    setActiveRoadmap(null);
+    setRoadmapError("");
+    setRoadmapLoading(false);
+  }
+
+  // Registration form
   const [form, setForm] = useState({
     session: "2024/2025",
-    term: "",
-    klass: "SS 2",
+    term:    "",
+    klass:   "SS 2",
   });
+  const readyToPick = Boolean(form.session && form.term && form.klass);
 
+  // Modal visibility
+  const [pickerOpen,  setPickerOpen]  = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+
+  // Selected subject IDs (persisted to localStorage)
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   useEffect(() => {
     const raw = localStorage.getItem("nt_selected_subjects");
@@ -263,10 +96,90 @@ export default function AcademicsPage() {
     localStorage.setItem("nt_selected_subjects", JSON.stringify(selectedIds));
   }, [selectedIds]);
 
-  const [openPicker, setOpenPicker] = useState(false);
-  const readyToPick = form.session && form.term && form.klass;
+  // Subjects grid
+  const [subjects,        setSubjects]        = useState<SimpleSubject[]>([]);
+  const [subjectsLoading, setSubjectsLoading] = useState(true);
+  const [subjectsError,   setSubjectsError]   = useState("");
+  const fetchedSubjects = useRef(false);
 
-  const filteredGrid = SIMPLE_SUBJECTS.filter((s) => s.name.toLowerCase().includes(query.toLowerCase()));
+  useEffect(() => {
+    let mounted = true;
+    if (fetchedSubjects.current) return;
+    fetchedSubjects.current = true;
+
+    (async () => {
+      setSubjectsLoading(true);
+      setSubjectsError("");
+      try {
+        const data = await fetchAcademicSubjects();
+        if (!mounted) return;
+
+        const subjectsData =
+          Array.isArray(data)
+            ? data
+            : Array.isArray((data as any)?.subjects)
+            ? (data as any).subjects
+            : Array.isArray((data as any)?.data?.subjects)
+            ? (data as any).data.subjects
+            : Array.isArray((data as any)?.data)
+            ? (data as any).data
+            : null;
+
+        if (!subjectsData) {
+          throw new Error("Invalid academic subjects response");
+        }
+
+        setSubjects(
+          subjectsData.map((s: { name: string; teacherName?: string; isRegistered: boolean }, i: number) => ({
+            id:         toSubjectId(s.name, i),
+            name:       s.name,
+            teacher:    s.teacherName ?? "Unknown",
+            registered: s.isRegistered,
+            img:        "/_assets/books.png",
+          }))
+        );
+      } catch (err) {
+        if (!mounted) return;
+        setSubjectsError(err instanceof Error ? err.message : "Unable to load subjects");
+      } finally {
+        if (mounted) setSubjectsLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const visibleSubjects  = subjects;
+  const filteredSubjects = visibleSubjects.filter((s) =>
+    s.name.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Catalog derived from real subjects — feeds the picker modal + selected table
+  const catalog: CatalogItem[] = subjects.map((s) => ({
+    id:      s.id,
+    name:    s.name,
+    teacher: s.teacher,
+    type:    "Compulsory", // placeholder until backend returns compulsory/elective info
+  }));
+
+  // Handlers
+  function handleSave(ids: string[]) {
+    setSelectedIds(ids);
+    setPickerOpen(false);
+    setSuccessOpen(true);
+  }
+
+  function handleViewRegistered() {
+    setSuccessOpen(false);
+    setTab("selected");
+  }
+
+  const studentMeta = {
+    ...STUDENT,
+    term:    form.term || "First Term",
+    session: form.session,
+  };
+
+  // ─── Render ──────────────────────────────────────────────────────────────────
 
   return (
     <>
@@ -280,43 +193,93 @@ export default function AcademicsPage() {
 
         <AcademicsNavigation />
 
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          <StatCard label="Enrolled Subjects" value="10" iconSrc="/_assets/Vector3.png" iconAlt="Enrolled subjects" />
-          <StatCard label="Average Progress" value="78%" iconSrc="/_assets/Vector4.png" iconAlt="Average progress" />
-          <StatCard label="Total Students" value="56" iconSrc="/_assets/Vector5.png" iconAlt="Total students" />
-        </div>
+        {/* Stat cards — hidden when roadmap is open to reduce visual noise */}
+        {!activeRoadmapSubject && (
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+            <StatCard
+              label="Enrolled Subjects"
+              value={subjects.filter((s) => s.registered).length || selectedIds.length}
+              Icon={BookOpen}
+            />
 
+            <StatCard
+              label="Total Subjects"
+              value={visibleSubjects.length}
+              Icon={GraduationCap}
+            />
+          </div>
+        )}
+
+        {/* Main card */}
         <div className="rounded-2xl border border-slate-200 bg-white">
+          {/* Tab bar */}
           <div className="flex flex-wrap items-center gap-6 border-b border-slate-100 px-4 pt-4 sm:px-6">
-            {[
-              { key: "subjects", label: "Subjects" },
-              { key: "registration", label: `Subject Registration (${selectedIds.length})` },
-              { key: "selected", label: "Selected Subjects" },
-            ].map((t) => {
-              const active = tab === (t.key as typeof tab);
-              return (
-                <button
-                  key={t.key}
-                  onClick={() => setTab(t.key as typeof tab)}
-                  className={`relative -mb-px border-b-2 px-1.5 py-3 text-sm font-medium ${
-                    active ? "border-[#2A7EAF] text-slate-900" : "border-transparent text-slate-500 hover:text-slate-700"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              );
-            })}
+            {(
+              [
+                { key: "subjects",      label: "Subjects" },
+                { key: "registration",  label: `Subject Registration (${selectedIds.length})` },
+                { key: "selected",      label: "Selected Subjects" },
+              ] as { key: Tab; label: string }[]
+            ).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => {
+                  setTab(key);
+                  if (key !== "subjects") handleCloseRoadmap();
+                }}
+                className={`relative -mb-px border-b-2 px-1.5 py-3 text-sm font-medium transition-colors ${
+                  tab === key
+                    ? "border-[#2A7EAF] text-slate-900"
+                    : "border-transparent text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
+          {/* Tab content */}
           <div className="p-4 sm:p-6">
+
+            {/* ── Subjects tab ── */}
             {tab === "subjects" && (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredGrid.map((s) => (
-                  <SubjectCard key={s.id} s={s} />
-                ))}
-              </div>
+              <>
+                {/* Inline roadmap view */}
+                {activeRoadmapSubject ? (
+                  <SubjectRoadmap
+                    subjectName={activeRoadmapSubject}
+                    roadmap={activeRoadmap}
+                    loading={roadmapLoading}
+                    error={roadmapError}
+                    onBack={handleCloseRoadmap}
+                  />
+                ) : subjectsLoading ? (
+                  <div className="rounded-lg border border-slate-200 p-6 text-sm text-slate-500">
+                    Loading subjects…
+                  </div>
+                ) : subjectsError ? (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-6 text-sm text-amber-700">
+                    {subjectsError}
+                  </div>
+                ) : filteredSubjects.length ? (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {filteredSubjects.map((s) => (
+                      <SubjectCard
+                        key={s.id}
+                        s={s}
+                        onRoadmap={handleOpenRoadmap}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-slate-200 p-6 text-sm text-slate-500">
+                    No subjects found.
+                  </div>
+                )}
+              </>
             )}
 
+            {/* ── Registration form ── */}
             {tab === "registration" && (
               <section className="space-y-4">
                 <div>
@@ -324,129 +287,102 @@ export default function AcademicsPage() {
                   <p className="text-xs text-slate-500">Create and manage subjects in your school</p>
                 </div>
 
+                {/* Student info */}
                 <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                  <p className="text-[13px] font-semibold tracking-wide text-slate-900">SAMUEL SMITH DETAILS</p>
-                  <div className="mt-2 grid gap-6 text-[12px] text-slate-700 sm:grid-cols-3">
-                    <div>
-                      <span className="font-medium">Student ID:</span>
-                      <span className="ml-1">STU0034</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">Term:</span>
-                      <span className="ml-1">{form.term || ""}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">Class:</span>
-                      <span className="ml-1">{form.klass}</span>
-                    </div>
+                  <p className="text-[13px] font-semibold tracking-wide text-slate-900">
+                    SAMUEL SMITH DETAILS
+                  </p>
+                  <div className="mt-2 grid gap-4 text-[12px] text-slate-700 sm:grid-cols-3">
+                    <div><span className="font-medium">Student ID:</span> STU0034</div>
+                    <div><span className="font-medium">Term:</span> {form.term || "—"}</div>
+                    <div><span className="font-medium">Class:</span> {form.klass}</div>
                   </div>
                 </div>
 
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (readyToPick) setOpenPicker(true);
-                  }}
-                  className="rounded-xl border border-slate-200 bg-white p-4"
-                >
+                {/* Session / term / class selects */}
+                <div className="rounded-xl border border-slate-200 bg-white p-4">
                   <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                     <label className="text-xs font-medium text-slate-600">
                       SESSION
-                      <div className="relative mt-1">
-                        <select
-                          value={form.session}
-                          onChange={(e) => setForm((f) => ({ ...f, session: e.target.value }))}
-                          className="w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-sky-300 focus:outline-none"
-                        >
-                          {["2023/2024", "2024/2025", "2025/2026"].map((s) => (
-                            <option key={s}>{s}</option>
-                          ))}
-                        </select>
-                        <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">v</span>
-                      </div>
+                      <select
+                        value={form.session}
+                        onChange={(e) => setForm((f) => ({ ...f, session: e.target.value }))}
+                        className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-sky-300 focus:outline-none"
+                      >
+                        {["2023/2024", "2024/2025", "2025/2026"].map((s) => (
+                          <option key={s}>{s}</option>
+                        ))}
+                      </select>
                     </label>
 
                     <label className="text-xs font-medium text-slate-600">
                       TERM
-                      <div className="relative mt-1">
-                        <select
-                          value={form.term}
-                          onChange={(e) => setForm((f) => ({ ...f, term: e.target.value }))}
-                          className="w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-sky-300 focus:outline-none"
-                        >
-                          <option value="" disabled>
-                            Select Term
-                          </option>
-                          <option>First Term</option>
-                          <option>Second Term</option>
-                          <option>Third Term</option>
-                        </select>
-                        <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">v</span>
-                      </div>
+                      <select
+                        value={form.term}
+                        onChange={(e) => setForm((f) => ({ ...f, term: e.target.value }))}
+                        className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-sky-300 focus:outline-none"
+                      >
+                        <option value="" disabled>Select Term</option>
+                        <option>First Term</option>
+                        <option>Second Term</option>
+                        <option>Third Term</option>
+                      </select>
                     </label>
 
                     <label className="text-xs font-medium text-slate-600">
                       CLASS
-                      <div className="relative mt-1">
-                        <select
-                          value={form.klass}
-                          onChange={(e) => setForm((f) => ({ ...f, klass: e.target.value }))}
-                          className="w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-sky-300 focus:outline-none"
-                        >
-                          <option>SS 1</option>
-                          <option>SS 2</option>
-                          <option>SS 3</option>
-                        </select>
-                        <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">v</span>
-                      </div>
+                      <select
+                        value={form.klass}
+                        onChange={(e) => setForm((f) => ({ ...f, klass: e.target.value }))}
+                        className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-sky-300 focus:outline-none"
+                      >
+                        <option>SS 1</option>
+                        <option>SS 2</option>
+                        <option>SS 3</option>
+                      </select>
                     </label>
                   </div>
 
                   <div className="mt-4 flex justify-end">
                     <button
-                      type="submit"
+                      type="button"
                       disabled={!readyToPick}
-                      className={`inline-flex items-center rounded-md bg-[#2A7EAF] px-5 py-2 text-sm font-medium text-white transition ${
-                        readyToPick ? "hover:bg-[#236a90]" : "opacity-50"
-                      }`}
+                      onClick={() => readyToPick && setPickerOpen(true)}
+                      className="inline-flex items-center rounded-md bg-[#2A7EAF] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#236a90] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Proceed
                     </button>
                   </div>
-                </form>
+                </div>
               </section>
             )}
 
+            {/* ── Selected subjects table ── */}
             {tab === "selected" && (
               <SelectedSubjectsTable
                 ids={selectedIds}
-                student={{
-                  name: "Samuel Smith",
-                  id: "STU0034",
-                  term: form.term || "First Term",
-                  klass: form.klass,
-                }}
+                catalog={catalog}
+                student={studentMeta}
               />
             )}
           </div>
         </div>
       </div>
 
+      {/* Modals */}
       <SubjectPickerModal
-        open={openPicker}
-        onClose={() => setOpenPicker(false)}
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        catalog={catalog}
         initial={selectedIds}
-        student={{
-          name: "Samuel Smith",
-          id: "STU0034",
-          term: form.term || "First Term",
-          klass: form.klass,
-        }}
-        onSave={(ids) => {
-          setSelectedIds(ids);
-          setOpenPicker(false);
-          setTab("selected");
-        }}
+        student={studentMeta}
+        onSave={handleSave}
+      />
+
+      <SuccessModal
+        open={successOpen}
+        student={studentMeta}
+        onViewSubjects={handleViewRegistered}
       />
     </>
   );

@@ -1,132 +1,254 @@
 "use client";
-
-import { useState } from "react";
-import Link from "next/link";
-import { Lightbulb, Lock } from "lucide-react";
+import React, { useState } from "react";
 import AcademicsNavigation from "../_components/academicsNavigation";
 import AcademicsPageHeader from "../_components/academicsPageHeader";
 
-type RoadmapItem = {
-  id: number;
-  title: string;
-  duration: string;
-  status: "completed" | "in-progress" | "locked";
-  progress: number;
+import { ClassroomTabs } from "./_components/classroomTabs";
+import { LiveClassCards } from "./_components/liveClassCards";
+import { SetReminderModal } from "./_components/setReminderMOdal";
+import { SuccessModal } from "./_components/successModal";
+import { LiveClassroomView } from "./_components/liveClassroomView";
+import { LeaveClassModal, ClassEndedModal, AssignmentCompleteModal } from "./_components/classModals";
+import { StartAssignment } from "./_components/startAssignment";
+import { QuestionsView } from "./_components/questionsView";
+import { LearningRoadmap } from "./_components/learningRoadmap";
+import { LearningMaterials } from "./_components/learningMaterials";
+
+import type { ClassroomTab, ClassroomView, ReminderForm, AnswerMap, LiveSessionDto } from "@/types/academic-classroom";
+type LiveClass = LiveSessionDto;
+import { DEMO_QUESTIONS } from "./demoData";
+
+// ─── Modal state union ────────────────────────────────────────────────────────
+type ModalState =
+  | { type: "none" }
+  | { type: "set-reminder"; cls: LiveClass }
+  | { type: "reminder-success"; cls: LiveClass; form: ReminderForm }
+  | { type: "leaving-class" }
+  | { type: "class-ended" }
+  | { type: "assignment-complete" };
+
+const ClassroomPage = () => {
+  // ── Tab state ──────────────────────────────────────────────────────────────
+  const [activeTab, setActiveTab] = useState<ClassroomTab>("live-classes");
+
+  // ── View state machine (for live class flow) ───────────────────────────────
+  const [view, setView] = useState<ClassroomView>("list");
+  const [activeClass, setActiveClass] = useState<LiveClass | null>(null);
+  const [pendingAnswers, setPendingAnswers] = useState<AnswerMap>({});
+
+  // ── Modal state ────────────────────────────────────────────────────────────
+  const [modal, setModal] = useState<ModalState>({ type: "none" });
+
+  // ─── Handlers ──────────────────────────────────────────────────────────────
+
+  const handleJoinClass = (cls: LiveClass) => {
+    setActiveClass(cls);
+    setView("live");
+  };
+
+  const handleSetReminder = (cls: LiveClass) => {
+    setModal({ type: "set-reminder", cls });
+  };
+
+  const handleReminderSuccess = (cls: LiveClass, form: ReminderForm) => {
+    setModal({ type: "reminder-success", cls, form });
+  };
+
+  const handleCloseReminder = () => {
+    setModal({ type: "none" });
+  };
+
+  // Leave class flow
+  const handleLeaveIntent = () => {
+    setModal({ type: "leaving-class" });
+  };
+
+  const handleConfirmLeave = () => {
+    setModal({ type: "class-ended" });
+  };
+
+  const handleStayInClass = () => {
+    setModal({ type: "none" });
+  };
+
+  // Class ended
+  const handleClassEndedLater = () => {
+    setModal({ type: "none" });
+    setView("replay");
+  };
+
+  const handleClassEndedStartAssignment = () => {
+    setModal({ type: "none" });
+    setView("start-assignment");
+  };
+
+  // Assignment flow
+  const handleStartAssignment = () => {
+    setView("questions");
+  };
+
+  const handleSubmitAnswers = (answers: AnswerMap) => {
+    const unanswered = DEMO_QUESTIONS.filter((q) => !answers[q.id]);
+    if (unanswered.length > 0) {
+      setPendingAnswers(answers);
+      setView("incomplete");
+    } else {
+      setModal({ type: "assignment-complete" });
+    }
+  };
+
+  const handleReturnToQuestions = () => {
+    setView("questions");
+  };
+
+  const handleAssignmentDone = () => {
+    setModal({ type: "none" });
+    setView("list");
+    setActiveClass(null);
+  };
+
+  const handleBackToList = () => {
+    setView("list");
+    setActiveClass(null);
+  };
+
+  // ─── Render ────────────────────────────────────────────────────────────────
+  return (
+    <div className="flex flex-col min-h-full bg-gray-50 px-4 pt-0 pb-4 md:px-6 md:pt-0 md:pb-6 gap-4 md:gap-5 overflow-auto">
+
+      {/* Page header — always visible */}
+      <div className="space-y-4">
+        <AcademicsPageHeader
+          title="Classroom"
+          subtitle="Join live classes and access learning Materials"
+          showBack
+        />
+        <AcademicsNavigation />
+      </div>
+
+      {/* Main content card */}
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+
+        {/* Tab bar — only show on list view */}
+        {view === "list" && (
+          <div className="px-2 md:px-4 pt-1 overflow-x-auto border-b border-gray-200">
+            <ClassroomTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          </div>
+        )}
+
+        {/* Content area */}
+        <div className="p-4 md:p-5">
+
+          {/* ── LIST VIEW ── */}
+          {view === "list" && (
+            <>
+              {activeTab === "live-classes" && (
+                <LiveClassCards
+                  onJoinClass={handleJoinClass}
+                  onSetReminder={handleSetReminder}
+                />
+              )}
+              {activeTab === "learning-roadmap" && <LearningRoadmap />}
+              {activeTab === "learning-materials" && <LearningMaterials />}
+            </>
+          )}
+
+          {/* ── LIVE CLASSROOM ── */}
+          {view === "live" && activeClass && (
+            <LiveClassroomView
+              cls={activeClass}
+              isReplay={false}
+              onLeaveClass={handleLeaveIntent}
+            />
+          )}
+
+          {/* ── REPLAY VIEW ── */}
+          {view === "replay" && activeClass && (
+            <LiveClassroomView
+              cls={activeClass}
+              isReplay={true}
+              onLeaveClass={handleBackToList}
+              onCheckAssignment={handleClassEndedStartAssignment}
+            />
+          )}
+
+          {/* ── START ASSIGNMENT ── */}
+          {view === "start-assignment" && (
+            <StartAssignment
+              onBack={handleBackToList}
+              onStart={handleStartAssignment}
+            />
+          )}
+
+          {/* ── QUESTIONS ── */}
+          {view === "questions" && (
+            <QuestionsView
+              onBack={() => setView("start-assignment")}
+              onSubmit={handleSubmitAnswers}
+            />
+          )}
+
+          {/* ── SUBMISSION INCOMPLETE ── */}
+          {view === "incomplete" && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-6 text-center">
+              <h3 className="text-lg font-semibold text-amber-900">Incomplete Submission</h3>
+              <p className="mt-2 text-sm text-amber-800">Please answer all remaining questions before submitting.</p>
+              <button
+                onClick={handleReturnToQuestions}
+                className="mt-4 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+              >
+                Return to Questions
+              </button>
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* ── MODALS ── */}
+
+      {modal.type === "set-reminder" && (
+        <SetReminderModal
+          cls={modal.cls}
+          onClose={handleCloseReminder}
+          onSuccess={handleReminderSuccess}
+        />
+      )}
+
+      {modal.type === "reminder-success" && (
+        <SuccessModal
+          title="Successful!"
+          message={`You've successfully added a reminder for\n${modal.cls.subject}, ${modal.form.time} Class`}
+          primaryLabel="Done"
+          secondaryLabel="Add New"
+          onPrimary={handleCloseReminder}
+          onSecondary={() => setModal({ type: "set-reminder", cls: modal.cls })}
+        />
+      )}
+
+      {modal.type === "leaving-class" && (
+        <LeaveClassModal
+          onLeave={handleConfirmLeave}
+          onStay={handleStayInClass}
+        />
+      )}
+
+      {modal.type === "class-ended" && (
+        <ClassEndedModal
+          onLater={handleClassEndedLater}
+          onStartAssignment={handleClassEndedStartAssignment}
+        />
+      )}
+
+      {modal.type === "assignment-complete" && (
+        <AssignmentCompleteModal
+          onNextClass={handleAssignmentDone}
+          onDashboard={handleAssignmentDone}
+        />
+      )}
+
+    </div>
+  );
 };
 
-const ROADMAP: RoadmapItem[] = [
-  { id: 1, title: "Mathematics", duration: "2 Weeks", status: "completed", progress: 100 },
-  { id: 2, title: "English Language", duration: "3 Weeks", status: "completed", progress: 100 },
-  { id: 3, title: "Physic", duration: "4 Weeks", status: "in-progress", progress: 52 },
-  { id: 4, title: "Biology Practical", duration: "5 Weeks", status: "locked", progress: 0 },
-];
-
-
-function StatusChip({ status }: { status: RoadmapItem["status"] }) {
-  if (status === "completed") {
-    return <span className="rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-0.5 text-[10px]">Completed</span>;
-  }
-  if (status === "in-progress") {
-    return <span className="rounded-full bg-sky-100 text-sky-700 px-2.5 py-0.5 text-[10px]">In Progress</span>;
-  }
-  return <span className="rounded-full bg-slate-200 text-slate-700 px-2.5 py-0.5 text-[10px]">Locked</span>;
-}
-
-function StageChips() {
-  const chip = (t: string) => (
-    <span key={t} className="rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-[10px] text-slate-700">
-      {t}
-    </span>
-  );
-  return <div className="mt-2 flex flex-wrap gap-2">{["Foundation", "Intermediate", "Advance"].map(chip)}</div>;
-}
-
-function ProgressBar({ value, status }: { value: number; status: RoadmapItem["status"] }) {
-  const barColor = status === "completed" ? "bg-sky-500" : status === "in-progress" ? "bg-orange-500" : "bg-slate-300";
-
-  return (
-    <div className="mt-2 min-w-0">
-      <div className="flex items-center justify-between text-[10px] text-slate-500">
-        <span>Progress</span>
-        <span>{value}%</span>
-      </div>
-      <div className="mt-1 h-2 w-full rounded-full bg-slate-200">
-        <div className={`h-2 rounded-full ${barColor}`} style={{ width: `${value}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function LeftBadge({ id, status }: { id: number; status: RoadmapItem["status"] }) {
-  if (status === "completed" && id <= 2) {
-    return (
-      <span className="mr-3 grid h-9 w-9 place-items-center rounded-full bg-emerald-50">
-        <Lightbulb className="h-4 w-4 text-emerald-600" />
-      </span>
-    );
-  }
-  if (status === "locked") {
-    return (
-      <span className="mr-3 grid h-9 w-9 place-items-center rounded-full bg-slate-200 text-slate-600">
-        <Lock className="h-4 w-4" />
-      </span>
-    );
-  }
-  return (
-    <span className="mr-3 grid h-9 w-9 place-items-center rounded-full bg-sky-100 text-sky-700 text-sm font-semibold">
-      {id}
-    </span>
-  );
-}
-
-function RoadmapRow({ item }: { item: RoadmapItem }) {
-  const rowBg = item.status === "completed" ? "bg-emerald-50" : item.status === "in-progress" ? "bg-sky-50" : "bg-slate-50";
-
-  return (
-    <div className={`rounded-xl border border-slate-200 ${rowBg} px-4 py-4`}>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex flex-1 min-w-0 items-start gap-3">
-          <LeftBadge id={item.id} status={item.status} />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-slate-900">{item.title}</p>
-            <p className="text-[11px] text-slate-500">Duration · {item.duration}</p>
-
-            <ProgressBar value={item.progress} status={item.status} />
-            <StageChips />
-          </div>
-        </div>
-
-        <StatusChip status={item.status} />
-      </div>
-    </div>
-  );
-}
-
-export default function ClassroomPage() {
-  const [query, setQuery] = useState("");
-
-  return (
-    <div className="px-4 pt-0 pb-6 space-y-5 sm:px-5 md:px-6">
-      <AcademicsPageHeader
-        title="Subjects"
-        subtitle="Access your learning materials and track progress"
-        searchValue={query}
-        onSearchChange={setQuery}
-      />
-      <AcademicsNavigation />
-
-      <section className="rounded-2xl border border-slate-200 bg-white p-5">
-        <div className="mb-4">
-          <h2 className="text-sm font-semibold text-slate-900">Learning Roadmap</h2>
-          <p className="text-xs text-slate-500">Your structured learning path across all subjects</p>
-        </div>
-
-        <div className="space-y-4">
-          {ROADMAP.map((item) => (
-            <RoadmapRow key={item.id} item={item} />
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
+export default ClassroomPage;

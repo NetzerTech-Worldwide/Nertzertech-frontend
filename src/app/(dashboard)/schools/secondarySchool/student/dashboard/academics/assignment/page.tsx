@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AcademicsNavigation, { ACADEMICS_BASE } from "../_components/academicsNavigation";
 import AcademicsPageHeader from "../_components/academicsPageHeader";
+import { fetchAssignments } from "../../../../endpoints/assignments";
 
 type AssignmentStatus = "submitted" | "pending";
 type PriorityLevel = "LOW" | "MEDIUM" | "HIGH";
@@ -22,54 +23,6 @@ type Assignment = {
   startHref?: string;
 };
 
-const ASSIGNMENTS: Assignment[] = [
-  {
-    id: "eng-essay",
-    title: "English Essay",
-    subject: "English",
-    due: "2025-07-15",
-    description: 'Write an essay on "The Importance of Discipline in Schools" (450-500 words).',
-    type: "Essay",
-    priority: "LOW",
-    points: "100/89",
-    status: "submitted",
-    submissionHref: `${ACADEMICS_BASE}/assignment/eng-essay`,
-  },
-  {
-    id: "bio-digestive",
-    title: "Human digestive system",
-    subject: "Biology",
-    due: "2025-07-21",
-    description: "Draw and label the human digestive system.",
-    type: "Worksheet",
-    priority: "MEDIUM",
-    points: "120",
-    status: "pending",
-  },
-  {
-    id: "math-graphs",
-    title: "Mathematics Assignment",
-    subject: "Mathematics",
-    due: "2025-07-23",
-    description: "Solve 10 questions on quadratic equations and plot their graphs.",
-    type: "Worksheet",
-    priority: "MEDIUM",
-    points: "120",
-    status: "pending",
-  },
-  {
-    id: "geo-rainfall",
-    title: "Rainfall Formation Processes",
-    subject: "Geography",
-    due: "2025-07-18",
-    description: "Discuss types of rainfall and their formation processes.",
-    type: "Worksheet",
-    priority: "HIGH",
-    points: "120",
-    status: "pending",
-    startHref: `${ACADEMICS_BASE}/assignment/geo-rainfall`,
-  },
-];
 
 function StatusBadge({ status }: { status: AssignmentStatus }) {
   const isSubmitted = status === "submitted";
@@ -175,18 +128,61 @@ const TABS = [
 export default function AssignmentPage() {
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("all");
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const isSubmittedTab = tab === "submitted";
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    setError("");
+
+    fetchAssignments(tab)
+      .then((data) => {
+        if (!mounted) return;
+        setAssignments(
+          data.map((assignment) => ({
+            id: assignment.id,
+            title: assignment.title,
+            subject: assignment.subject,
+            due: new Date(assignment.dueDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }),
+            description: assignment.description,
+            type: assignment.type,
+            priority: assignment.priority.toUpperCase() as PriorityLevel,
+            points: String(assignment.points),
+            status: assignment.status === "submitted" ? "submitted" : "pending",
+            startHref: assignment.status !== "submitted" ? `${ACADEMICS_BASE}/assignment/${assignment.id}` : undefined,
+          }))
+        );
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        setError(err instanceof Error ? err.message : "Unable to load assignments");
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [tab]);
 
   const filteredAssignments = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ASSIGNMENTS.filter((a) => {
+    return assignments.filter((a) => {
       const matchesTab = tab === "all" ? true : tab === a.status;
       const matchesQuery = q
         ? [a.title, a.subject, a.description].some((field) => field.toLowerCase().includes(q))
         : true;
       return matchesTab && matchesQuery;
     });
-  }, [query, tab]);
+  }, [assignments, query, tab]);
 
   return (
     <div className="px-4 pt-0 pb-6 sm:px-5 md:px-6 space-y-5">
