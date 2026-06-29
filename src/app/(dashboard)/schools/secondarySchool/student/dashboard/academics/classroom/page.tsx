@@ -121,7 +121,6 @@ const ClassroomPage = () => {
         <AcademicsPageHeader
           title="Classroom"
           subtitle="Join live classes and access learning Materials"
-          showBack
         />
         <AcademicsNavigation />
       </div>

@@ -200,12 +200,14 @@ export const DEMO_START_ACTIVITY: StartActivityResponseDto = {
 
 // ─── Learning Materials (mirrors LearningMaterialDto[]) ──────────────────────
 export const DEMO_MATERIALS: LearningMaterialDto[] = [
-  { id: "mat-1", name: "Calculus Integration - Full Notes", fileType: "pdf", duration: null, views: 142 },
-  { id: "mat-2", name: "Electromagnetic Induction Slides", fileType: "pdf", duration: null, views: 98 },
-  { id: "mat-3", name: "Organic Chemistry Synthesis Recap", fileType: "doc", duration: null, views: 67 },
-  { id: "mat-4", name: "Integration Techniques - Video Lesson", fileType: "video", duration: "24:30", views: 210 },
-  { id: "mat-5", name: "Past Questions - Calculus", fileType: "pdf", duration: null, views: 305 },
-  { id: "mat-6", name: "Physics Lab Report Template", fileType: "doc", duration: null, views: 44 },
+  // Videos — rendered in left "Video Lecture" column
+  { id: "mat-1", name: "Trigonometry", fileType: "video", duration: "2.5 Hours", views: 11 },
+  { id: "mat-2", name: "Essay Writing", fileType: "video", duration: "1 Hour", views: 16 },
+  { id: "mat-3", name: "Reproduction", fileType: "video", duration: "1.5 Hours", views: 1011 },
+  // Docs/PDFs — rendered in right "Study Guide" column
+  { id: "mat-4", name: "Practice Essay Writing", fileType: "pdf", duration: null, views: 14 },
+  { id: "mat-5", name: "WAEC/NECO Questions", fileType: "pdf", duration: null, views: 49 },
+  { id: "mat-6", name: "Practice Periodic Table", fileType: "pdf", duration: null, views: 12 },
 ];
 
 // ─── Assignment Meta (UI-only, no direct API equivalent) ─────────────────────

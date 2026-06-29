@@ -30,7 +30,7 @@ function FilterPill({ href, label }: { href: string; label: string }) {
       className={`rounded-full border px-4 py-2 text-xs leading-none transition text-[17px]
         ${
           active
-            ? "bg-[#2A7EAF] text-white border-[#2A7EAF]"
+            ? "bg-[#216388] text-white border-[#2A7EAF]"
             : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
         }`}
     >
