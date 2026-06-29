@@ -1,40 +1,51 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { BASE_URL } from '../../utils/config';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { BASE_URL } from "../../utils/config";
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get("token")?.value;
+
+    console.log("Token:", token);
 
     if (!token) {
       return NextResponse.json(
-        { message: 'Unauthorized' },
+        { message: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    // Call the backend profile endpoint with the token
-    const res = await fetch(`${BASE_URL}/me`, {
-      method: 'GET',
+    const res = await fetch(`${BASE_URL}/auth/profile`, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
+    const body = await res.text();
+
+    console.log("Backend status:", res.status);
+    console.log("Backend response:", body);
+
     if (!res.ok) {
       return NextResponse.json(
-        { message: 'Failed to fetch profile' },
+        {
+          status: res.status,
+          backendResponse: body,
+        },
         { status: res.status }
       );
     }
 
-    const data = await res.json();
-    return NextResponse.json({ user: data });
+    return NextResponse.json({
+      user: JSON.parse(body),
+    });
   } catch (error) {
-    console.error('Profile fetch error:', error);
+    console.error(error);
+
     return NextResponse.json(
-      { message: 'Internal server error' },
+      {
+        error: String(error),
+      },
       { status: 500 }
     );
   }
