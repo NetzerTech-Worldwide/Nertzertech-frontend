@@ -18,27 +18,27 @@ export default function AccountSecurity({ devices }: Props) {
 
   const items = [
     {
-      icon: <Lock className="w-4 h-4 text-gray-500" />,
+      icon: <Lock className="w-4 h-4 " />,
       label: "Change Password",
       action: () => setModal("changePassword"),
     },
     {
-      icon: <Mail className="w-4 h-4 text-gray-500" />,
+      icon: <Mail className="w-4 h-4 " />,
       label: "Update Email",
       action: () => setModal("updateEmail"),
     },
     {
-      icon: <Bell className="w-4 h-4 text-gray-500" />,
+      icon: <Bell className="w-4 h-4 " />,
       label: "Notification Preferences",
       action: () => {},
     },
     {
-      icon: <Shield className="w-4 h-4 text-gray-500" />,
+      icon: <Shield className="w-4 h-4 " />,
       label: "Privacy Settings",
       action: () => {},
     },
     {
-      icon: <Clock className="w-4 h-4 text-gray-500" />,
+      icon: <Clock className="w-4 h-4 " />,
       label: "Session History",
       action: () => setModal("sessionHistory"),
     },
@@ -47,7 +47,7 @@ export default function AccountSecurity({ devices }: Props) {
   return (
     <>
       <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">
+        <h3 className="text-[28px] font-semibold text-black mb-2">
           Account &amp; Security
         </h3>
         <div className="divide-y divide-gray-100">
@@ -57,9 +57,9 @@ export default function AccountSecurity({ devices }: Props) {
               onClick={item.action}
               className="w-full flex items-center justify-between py-3.5 hover:bg-gray-50 hover:cursor-pointer -mx-2 px-2 rounded-lg transition-colors group"
             >
-              <div className="flex items-center gap-3">
-                {item.icon}
-                <span className="text-sm text-gray-700">{item.label}</span>
+              <div className="flex items-center gap-3 ">
+                <span className="text-[#2A7EAF] font-[400] text-[20px] ">{item.icon}</span>
+                <span className="text-sm text-gray-700 font-[400] text-[20px]=">{item.label}</span>
               </div>
               <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
             </button>

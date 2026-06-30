@@ -1,12 +1,67 @@
 "use client";
 // components/profile/ChangePasswordModal.tsx
+import { useState } from "react";
 import { X } from "lucide-react";
 
 interface Props {
   onClose: () => void;
 }
 
+async function changePassword(payload: {
+  oldPassword: string;
+  newPassword: string;
+}) {
+  const res = await fetch("/api/profile/password", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.text().catch(() => "");
+    throw new Error(errorBody || `Password update failed: ${res.status}`);
+  }
+}
+
 export default function ChangePasswordModal({ onClose }: Props) {
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit() {
+    setMessage("");
+    setError("");
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      setError("Please fill in all password fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("New password and confirmation do not match.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await changePassword({ oldPassword, newPassword });
+      setMessage("Password updated successfully.");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to update password.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/30">
       <div className="bg-white h-full w-full max-w-sm shadow-2xl flex flex-col">
@@ -25,6 +80,8 @@ export default function ChangePasswordModal({ onClose }: Props) {
             </label>
             <input
               type="password"
+              value={oldPassword}
+              onChange={(event) => setOldPassword(event.target.value)}
               placeholder="Enter current password"
               className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2E8BC0] focus:border-transparent"
             />
@@ -35,6 +92,8 @@ export default function ChangePasswordModal({ onClose }: Props) {
             </label>
             <input
               type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
               placeholder="Enter new password"
               className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2E8BC0] focus:border-transparent"
             />
@@ -45,10 +104,18 @@ export default function ChangePasswordModal({ onClose }: Props) {
             </label>
             <input
               type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="Confirm new password"
               className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2E8BC0] focus:border-transparent"
             />
           </div>
+          {error && (
+            <p className="text-xs font-medium text-red-600">{error}</p>
+          )}
+          {message && (
+            <p className="text-xs font-medium text-green-600">{message}</p>
+          )}
         </div>
 
         <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-gray-100">
@@ -58,8 +125,12 @@ export default function ChangePasswordModal({ onClose }: Props) {
           >
             Cancel
           </button>
-          <button className="px-5 py-2 text-sm font-medium text-white bg-[#2E8BC0] hover:bg-blue-600 hover:cursor-pointer rounded-lg transition-colors">
-            Update Password
+          <button
+            onClick={() => void handleSubmit()}
+            disabled={submitting}
+            className="px-5 py-2 text-sm font-medium text-white bg-[#2E8BC0] hover:bg-blue-600 hover:cursor-pointer rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {submitting ? "Updating..." : "Update Password"}
           </button>
         </div>
       </div>

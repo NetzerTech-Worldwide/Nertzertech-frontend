@@ -21,7 +21,7 @@ export default function RecentActivity({ activity }: Props) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-gray-900">Recent Activity</h3>
+        <h3 className="text-black font-bold text-[28px]">Recent Activity</h3>
         <button className="text-xs text-teal-600 hover:underline hover:cursor-pointer font-medium">
           View All
         </button>
