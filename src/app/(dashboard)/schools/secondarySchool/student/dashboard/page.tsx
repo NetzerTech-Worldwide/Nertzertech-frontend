@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { BookOpen, CalendarClock, Clock, Library, Headphones } from "lucide-react";
 
@@ -162,30 +163,30 @@ export default function DashboardPage() {
       <section>
         <h2 className="text-base font-semibold text-slate-900 mb-3">Quick Access</h2>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 text-sm">
-          <a href="/schools/secondarySchool/student/subjects" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
+          <Link href="/schools/secondarySchool/student/dashboard/subjects" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
             <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full">
               <BookOpen className="h-5 w-5 text-[#E48251]" />
             </div>
             <span className="font-medium text-slate-900">Subjects</span>
-          </a>
-          <a href="/schools/secondarySchool/student/timetable" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
+          </Link>
+          <Link href="/schools/secondarySchool/student/dashboard/timetable" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
             <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full">
               <CalendarClock className="h-5 w-5 text-[#2E8BC0]" />
             </div>
             <span className="font-medium text-slate-900">Timetable</span>
-          </a>
-          <a href="/schools/secondarySchool/student/library" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
+          </Link>
+          <Link href="/schools/secondarySchool/student/dashboard/library" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
             <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full">
               <Library className="h-5 w-5 text-[#72FC22]" />
             </div>
             <span className="font-medium text-slate-900">Library</span>
-          </a>
-          <a href="/schools/secondarySchool/student/support" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
+          </Link>
+          <Link href="/schools/secondarySchool/student/dashboard/support" className="rounded-2xl bg-white p-4 flex flex-col items-center justify-center hover:bg-slate-50">
             <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full">
               <Headphones className="h-5 w-5 text-[#FF77C6]" />
             </div>
             <span className="font-medium text-slate-900">Support</span>
-          </a>
+          </Link>
         </div>
       </section>
     </>

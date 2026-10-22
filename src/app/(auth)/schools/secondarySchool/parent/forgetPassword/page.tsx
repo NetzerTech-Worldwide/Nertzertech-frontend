@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import HeroSection from '../../../../../_components/authHeroSection';
-import heroImage from '../../../../Assets/parentOne.png'
+import heroImage from '../../../../../Assets/parentOne.png'
 import { forgetPassword } from '../../../../../utils/authApi';
 
 const ForgotPasswordInterface: React.FC = () => {

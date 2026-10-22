@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const SUBJECTS_BASE = "/school/secondarySchool/student/dashboard/academics";
+const SUBJECTS_BASE = "/schools/secondarySchool/student/dashboard/academics";
 
 const TOP_FILTERS = [
   { label: "Subject", href: SUBJECTS_BASE },

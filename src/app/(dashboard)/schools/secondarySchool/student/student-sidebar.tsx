@@ -10,12 +10,12 @@ import {
   Trophy, Headphones, CheckSquare, User, Menu, ChevronRight, LogOut, X
 } from "lucide-react";
 
-const BASE = "/school/secondarySchool/student/dashboard";
+const BASE = "/schools/secondarySchool/student/dashboard";
 
 type Item = { label: string; href: string; icon: LucideIcon; hasArrow?: boolean };
 
 export const NAV: Item[] = [
-  { label: "Dashboard",    href: `${BASE}/dashboard`,    icon: LayoutDashboard },
+  { label: "Dashboard",    href: BASE,                   icon: LayoutDashboard },
   { label: "Academics",    href: `${BASE}/academics`,    icon: BookOpen,      hasArrow: true },
   { label: "Student Life", href: `${BASE}/student-life`, icon: GraduationCap, hasArrow: true },
   { label: "Forum",        href: `${BASE}/forum`,        icon: MessageSquare },
@@ -37,7 +37,8 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
     <nav className="space-y-2">
       {NAV.map(({ label, href, icon: Icon, hasArrow }) => {
         const target = normalize(href);
-        const active = pathname === target || pathname.startsWith(target + "/");
+        // Every page lives under BASE, so Dashboard only matches exactly
+        const active = pathname === target || (target !== BASE && pathname.startsWith(target + "/"));
         return (
           <Link
             key={href}

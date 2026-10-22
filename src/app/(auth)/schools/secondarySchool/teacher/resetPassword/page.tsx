@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import HeroSection from '../../../../../_components/authHeroSection';
 import { resetPassword } from '../../../../../utils/authApi';
-import heroImage from '../../../../Assets/teacherOne.png'
+import heroImage from '../../../../../Assets/teacherOne.png'
 
 
 const ResetPasswordInterface: React.FC = () => {

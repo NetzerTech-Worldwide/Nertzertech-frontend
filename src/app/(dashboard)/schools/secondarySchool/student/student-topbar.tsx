@@ -3,7 +3,7 @@
 import { Bell, Mail, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-const DASHBOARD = "/school/secondarySchool/student/dashboard";
+const DASHBOARD = "/schools/secondarySchool/student/dashboard";
 
 function normalize(p: string) {
   const t = p.replace(/\/+$/g, "");
